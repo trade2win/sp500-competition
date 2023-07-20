@@ -14,6 +14,10 @@ npm install
 nodemon index.js
 ```
 
+## To-DO List
+
+Please read the [Tasks List](./TASKS.md)
+
 ## Contributing
 
 Pull requests are welcome. For major changes, please open an issue first
