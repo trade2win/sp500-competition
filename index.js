@@ -62,9 +62,9 @@ app.get("/exercise", function (request, response) {
   response.render("pages/exercise", data);
 });
 
-// Suggested next step
+// Suggested next step displaying the square of any number
 app.get("/square/:number", function (request, response) {
-  //
+  // grab the number from the request.params object
   const viewParameters = { number: request.params.number };
   response.render("pages/square", viewParameters);
 });
