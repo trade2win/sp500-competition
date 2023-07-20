@@ -3,6 +3,11 @@ h1 {
   font-size: 28px;
 }
 
+.number {
+  color: green;
+  font-weight: bold;
+}
+
 p {
   color: #3b73cc;
   font-size: 14px;
