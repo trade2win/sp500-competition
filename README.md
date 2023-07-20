@@ -1,4 +1,4 @@
-# sp500-competition
+# S&P 500 Weekly Competition on Trade2Win
 
 SP500 Competition is a weekly contest that is currently run on a thread in the forum, the latest one for 2023 is available in [this thread](https://www.trade2win.com/threads/s-p500-weekly-forecasting-competition-for-2023.241639/).
 
