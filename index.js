@@ -7,6 +7,9 @@ const app = express();
 // Specify which port to use (process.env.PORT if specified, OR 8000 otherwise)
 const port = process.env.PORT || 8000;
 
+// Require the 'body-parser' middleware in order to access POST data correctly via 'request.body'
+const bodyParser = require("body-parser");
+
 // Tell app to listen for incoming requests on the specified port
 app.listen(port, function () {
   console.log("App listening on port: " + port);
@@ -20,6 +23,10 @@ app.set("view engine", "ejs");
 
 // Tell the app where to find static files (i.e. .css, .js, images, etc)
 app.use(express.static("public"));
+
+// Thell the the app to use the body parser
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 // Associate the "/" url path with a given function.
 app.get("/", function (request, response) {
@@ -49,6 +56,19 @@ app.get("/test-ejs", function (request, response) {
   }
   const viewParameters = { text };
   response.render("pages/test.ejs", viewParameters);
+});
+
+// Prediction page
+app.get("/prediction", function (request, response) {
+  response.render("pages/prediction");
+});
+
+// Prediction receiving page
+app.post("/submit", function (request, response) {
+  console.log(request.body);
+  response.render("pages/prediction.ejs", {
+    prediction: request.body["prediction"],
+  });
 });
 
 // Create exercise page

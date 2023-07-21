@@ -1,10 +1,20 @@
-<!-- This imports the style.css file -->
-<link rel="stylesheet" type="text/css" href="/stylesheets/style.css" />
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('../partials/head'); %>
+  </head>
+  <body>
+    <header><%- include('../partials/header');%></header>
+    <main>
+      <div class="jumbotron">
+        <!-- A note about .ejs: everything inside of these symbols: <%=  %> will be executed as JavaScript.  -->
 
-<!-- A note about .ejs: everything inside of these symbols: <%=  %> will be executed as JavaScript.  -->
-
-<!-- This adds an h1 tag which contains the title property the input object -->
-<h1><%= title %></h1>
-
-<!-- This adds a regular old paragraph tag -->
-<p>More content coming soon...</p>
+        <!-- This adds an h1 tag which contains the title property the input object -->
+        <h1><%= title %></h1>
+        <!-- This adds a regular old paragraph tag -->
+        <p>More content coming soon...</p>
+      </div>
+    </main>
+    <footer><%- include('../partials/footer');%></footer>
+  </body>
+</html>

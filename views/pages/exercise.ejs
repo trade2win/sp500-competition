@@ -7,7 +7,7 @@
   </head>
   <body>
     <h1><%= title %></h1>
-    Current second: <%= seconds %> <% if (items.length) { %>
+    Current second: <%= seconds %> <% if (seconds % 2 === 0) { %>
     <ul>
       <% for (item of items) { %>
       <li><%= item %></li>
