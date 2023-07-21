@@ -10,6 +10,9 @@ const port = process.env.PORT || 8000;
 // Require the 'body-parser' middleware in order to access POST data correctly via 'request.body'
 const bodyParser = require("body-parser");
 
+// Hook up postgres
+const pool = require("./db");
+
 // Tell app to listen for incoming requests on the specified port
 app.listen(port, function () {
   console.log("App listening on port: " + port);
