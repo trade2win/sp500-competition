@@ -1,3 +1,6 @@
+// Import environment variables
+require("dotenv").config();
+
 // Import core libraries
 const express = require("express"); // Express is a minimalist web framework for Node.js
 const session = require("express-session"); // Creates a session middleware with the given options
