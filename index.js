@@ -1,101 +1,58 @@
-// Get express, an installed package from node_modules.
-const express = require("express");
+// Import core libraries
+const express = require("express"); // Express is a minimalist web framework for Node.js
+const session = require("express-session"); // Creates a session middleware with the given options
 
-// Create an express app that'll handle http requests and responses.
+// Import local libraries
+const passport = require("./passport"); // Passport is authentication middleware for Node.js
+const db = require("./db"); // Import the local database connection/configuration
+
+// Import middleware and routes
+const attachUser = require("./middleware/attachUser"); // Middleware to attach the user object to the response
+const routes = require("./routes"); // Aggregate and manage all route handlers of the application
+
+// Initialize an Express application
 const app = express();
 
-// Specify which port to use (process.env.PORT if specified, OR 8000 otherwise)
-const port = process.env.PORT || 8000;
+// Configure sessions to store data persistently across the user session
+app.use(
+  session({
+    secret: "watermelon", // The secret used to sign the session ID cookie
+    resave: false, // Whether to force the session to be saved back to the session store
+    saveUninitialized: false, // Whether to force an uninitialized session to be saved to the store
+  })
+);
 
-// Require the 'body-parser' middleware in order to access POST data correctly via 'request.body'
-const bodyParser = require("body-parser");
+// Initialize Passport.js as middleware for the Express app
+app.use(passport.initialize());
+app.use(passport.session());
 
-// Hook up postgres
-const pool = require("./db");
-
-// Tell app to listen for incoming requests on the specified port
-app.listen(port, function () {
-  console.log("App listening on port: " + port);
-});
-
-// Tell the app where to find view files (in the views folder)
+// Set the directory for Express.js to find EJS template files
 app.set("views", "views");
 
-// Tell the app that we'll use ejs as our view engine (i.e. template language)
+// Set the view engine to EJS for dynamic content generation
 app.set("view engine", "ejs");
 
-// Tell the app where to find static files (i.e. .css, .js, images, etc)
+// Specify the location of static files for delivery to the client
 app.use(express.static("public"));
 
-// Thell the the app to use the body parser
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+// Use middleware functions to parse incoming requests with JSON and URL-encoded payloads
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// Associate the "/" url path with a given function.
-app.get("/", function (request, response) {
-  // create object that we will pass into view teplate
-  const viewParameters = { title: "Welcome to Trade2Win S&P 500 Competition" };
-  // render home.ejs view template with viewParameters
-  response.render("pages/home", viewParameters);
-});
+// Apply the routes as middleware to our application
+app.use("/", routes.home);
+app.use("/me", routes.me);
+app.use("/login", routes.login);
+app.use("/logout", routes.logout);
+app.use("/prediction", routes.prediction);
+app.use("/submit", routes.submit);
+app.use("/auth", routes.auth);
 
-// Associate the "/test" url path with a given function.
-app.get("/test", function (request, response) {
-  // respond with an HTML string
-  response.send(`<h1>This is a test page</h1> <h2>TEST TEST TEST</h2>`);
-});
+// Add middleware to attach the user object to every view if the user is authenticated
+app.use(attachUser);
 
-// Create an ejs test page to play around with the template engine
-app.get("/test-ejs", function (request, response) {
-  const date = new Date("July 16, 2023 12:04:00");
-  const day = date.getDay(); // returns 0-6 (0 = Sunday ... 6 = Saturday)
-  let text = "";
-  //Check if it's a week day
-  if (day > 0 && day < 6) {
-    text = "a weekday, it's time to work hard!";
-  } else {
-    // Else it must be the weekend
-    text = "the weekend, it's time to have fun!";
-  }
-  const viewParameters = { text };
-  response.render("pages/test.ejs", viewParameters);
-});
-
-// Prediction page
-app.get("/prediction", function (request, response) {
-  response.render("pages/prediction");
-});
-
-// Prediction receiving page
-app.post("/submit", function (request, response) {
-  console.log(request.body);
-  response.render("pages/prediction.ejs", {
-    prediction: request.body["prediction"],
-  });
-});
-
-// Create exercise page
-app.get("/exercise", function (request, response) {
-  const data = {
-    title: "EJS Tags",
-    seconds: new Date().getSeconds(),
-    items: ["apple", "banana", "cherry"],
-    htmlContent: "<em>This is some em text</em>",
-  };
-  response.render("pages/exercise", data);
-});
-
-// Suggested next step displaying the square of any number
-app.get("/square/:number", function (request, response) {
-  // grab the number from the request.params object
-  const viewParameters = { number: request.params.number };
-  response.render("pages/square", viewParameters);
-});
-
-// Associate the "/view/SOME-MESSAGE" url path with a function.
-app.get("/view/:message", function (request, response) {
-  // create object that we will pass into view teplate
-  const viewParameters = { message: request.params.message };
-  // render viewMessage.ejs view template with viewParameters
-  response.render("pages/viewMessage", viewParameters);
+// Start the server and listen for incoming requests on the specified port
+const port = process.env.PORT || 8000; // The port number to use (process.env.PORT if specified, otherwise 8000)
+app.listen(port, function () {
+  console.log("App listening on port: " + port); // Print the port number to the console
 });

@@ -4,6 +4,9 @@ SP500 Competition is a weekly contest that is currently run on a thread in the f
 
 You can access the latest build here: (https://sp500-contest-59ea8f845b9d.herokuapp.com/).
 
+Nice bootstrap templates here:
+https://adminlte.io/blog/free-bootstrap-5-templates/
+
 ## Installation
 
 ```bash
