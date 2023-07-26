@@ -1,6 +1,6 @@
 <%- include('../partials/header', {user: user}); %>
 <h1>Predict where the S&P500 will finish in the coming week:</h1>
-<form action="/submit" method="POST">
+<form action="/prediction" method="POST">
   <input type="text" name="prediction" placeholder="Prediction" />
   <input type="submit" value="OK" />
 </form>

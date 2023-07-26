@@ -2,12 +2,12 @@ const express = require("express");
 const router = express.Router();
 
 // Create login page
-router.get("/", function (request, response) {
+router.get("/", function (req, res) {
   const viewParameters = {
-    user: request.user,
+    user: req.user,
     title: "Welcome to Trade2Win S&P 500 Competition",
   };
-  response.render("pages/login", viewParameters);
+  res.render("pages/login", viewParameters);
 });
 
 module.exports = router;

@@ -1,44 +1,13 @@
-// const Pool = require("pg").Pool;
+const db = require("../database/config");
 
-// const pool = new Pool({
-//   user: "",
-//   password: "",
-//   host: "",
-//   port: 0,
-//   database: "",
-// });
-const sqlite3 = require("sqlite3").verbose();
-
-let db = new sqlite3.Database("./database/users.db", (err) => {
-  if (err) {
-    console.error(err.message);
-  }
-  console.log("Connected to the users database.");
-});
-
-db.run(
-  `CREATE TABLE users(
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  providerId TEXT UNIQUE,
-  username TEXT,
-  accessToken TEXT,
-  refreshToken TEXT
-)`,
-  (err) => {
-    if (err) {
-      // Table already created
-    } else {
-      console.log("Users table created");
-    }
-  }
-);
-
+// Function to find user by ID
 function findById(id, cb) {
   db.get("SELECT * FROM users WHERE id = ?", id, (err, row) => {
     return cb(err, row);
   });
 }
 
+// Function to find or create a user
 function findOrCreate(user, cb) {
   // First, try to find the user
   db.get(
@@ -46,6 +15,7 @@ function findOrCreate(user, cb) {
     user.providerId,
     (err, row) => {
       if (err) {
+        // If there's an error, return it
         return cb(err);
       }
       if (row) {
@@ -58,6 +28,7 @@ function findOrCreate(user, cb) {
           [user.providerId, user.username, user.accessToken, user.refreshToken],
           function (err) {
             if (err) {
+              // If there's an error, return it
               return cb(err);
             }
             db.get(
@@ -74,6 +45,7 @@ function findOrCreate(user, cb) {
   );
 }
 
+// Export the findOrCreate and findById functions
 module.exports = {
   findOrCreate,
   findById,

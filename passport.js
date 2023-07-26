@@ -4,7 +4,7 @@ const OAuth2Strategy = require("passport-oauth2").Strategy; // OAuth 2.0 is an a
 const axios = require("axios"); // Axios is a promise-based HTTP client for the browser and Node.js
 
 // Import local libraries
-const db = require("./db"); // Import the local database connection/configuration
+const userService = require("./services/userService"); // Import the local database connection/configuration
 
 // Use the OAuth 2.0 strategy within Passport
 passport.use(
@@ -38,7 +38,7 @@ passport.use(
           const userData = response.data.me;
 
           // Use the retrieved user information to find or create a user in the local database
-          db.findOrCreate(
+          userService.findOrCreate(
             {
               providerId: userData.user_id,
               username: userData.username,
@@ -67,7 +67,7 @@ passport.serializeUser(function (user, done) {
 
 // Register a function that tells Passport how to deserialize users
 passport.deserializeUser(function (id, done) {
-  db.findById(id, function (err, user) {
+  userService.findById(id, function (err, user) {
     done(err, user);
   });
 });

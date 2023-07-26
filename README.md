@@ -16,7 +16,22 @@ npm install
 ## Usage
 
 ```bash
-nodemon index.js
+npm run dev // dev environment
+npm run start  // live production environment
+```
+
+## ORM
+
+We'll use Prisma as our ORM, if not we could use Sequelize. Or just vanilla sql. With an ORM we can easily store migrations in git and switch from sqlite to postgres.
+
+## Testing
+
+We're using [jest](https://jestjs.io/) for unit testing. In futurure can be used also
+for integration tests, mock functions, timer mocks.
+In future we might use [cypress](https://www.cypress.io/) for end to end testing.
+
+```bash
+npm test
 ```
 
 ## To-DO List

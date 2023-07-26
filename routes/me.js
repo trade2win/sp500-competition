@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const axios = require("axios");
 // add middleware
-const ensureAuthenticated = require("../middleware/ensureAuthenticated");
+const { ensureAuthenticated } = require("../middleware/ensureAuthenticated");
 
 router.get("/", ensureAuthenticated, (req, res) => {
   const user = req.user;
