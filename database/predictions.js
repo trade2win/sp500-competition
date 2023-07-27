@@ -1,20 +1,46 @@
-// Import the database configuration
-const db = require("./config");
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
 
-// Function to create a new prediction
-function createPrediction(userId, prediction, cb) {
-  db.run(
-    "INSERT INTO forecasts(userId, forecast, week, year) VALUES(?, ?, ?, ?)",
-    [userId, prediction.forecast, prediction.week, prediction.year],
-    function (err) {
-      if (err) {
-        return cb(err);
-      }
-      return cb(null);
-    }
-  );
+async function createPrediction(
+  userId,
+  forecast,
+  weekOfYear,
+  weekOfMonth,
+  month,
+  year
+) {
+  return await prisma.forecast.create({
+    data: {
+      userId,
+      forecast,
+      weekOfYear,
+      weekOfMonth,
+      month,
+      year,
+    },
+  });
+}
+
+async function findPrediction(userId, weekOfYear, year) {
+  return await prisma.forecast.findFirst({
+    where: {
+      userId,
+      weekOfYear,
+      year,
+    },
+  });
+}
+
+async function findAllPredictions() {
+  return await prisma.forecast.findMany({
+    include: {
+      user: true,
+    },
+  });
 }
 
 module.exports = {
   createPrediction,
+  findPrediction,
+  findAllPredictions,
 };

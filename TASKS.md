@@ -8,24 +8,24 @@ This document outlines the tasks and milestones for the project. It provides an 
 - **Subtasks:**
   - [x] ~~Set up a Node.js project with Express.js framework~~
   - [x] ~~Configure EJS as the templating engine for rendering views~~
-  - [ ] Connect the application to a PostgreSQL database
-  - [ ] Implement necessary database schemas and models
+  - [x] Connect the application to a Sqlite database
+  - [x] Implement necessary database schemas and models
 - **Notes:** The backend will be built using JavaScript, Node.js, Express.js, EJS, and PostgreSQL.
 
 ### Task 2: Implement User Authentication with OAuth
 
 - **Description:** Implement user authentication using the OAuth API provided by [trade2win](https://www.trade2win.com).
 - **Subtasks:**
-  - [ ] Integrate OAuth authentication with trade2win API
-  - [ ] Set up user login functionality
-  - [ ] Manage user sessions and authentication state
+  - [x] Integrate OAuth authentication with trade2win API
+  - [x] Set up user login functionality
+  - [x] Manage user sessions and authentication state
 - **Notes:** User authentication will be required for participaiting in the contest.
 
 ### Task 3: Design the website (sitemap of pages, template, pages)
 
 - **Description:** Define and design the website, providing an overview of the competition and displaying current predictions and leaderboard rankings.
 - **Subtasks:**
-  - [ ] Create a visually appealing and intuitive user interface for the homepage
+  - [x] Create a visually appealing and intuitive user interface for the homepage
   - [ ] Implement the dynamic display of current predictions and leaderboard rankings
   - [ ] Ensure responsiveness across different devices and screen sizes
 
@@ -33,9 +33,9 @@ This document outlines the tasks and milestones for the project. It provides an 
 
 - **Description:** Develop functionality for users to enter their predictions for the S&P500 index close at the end of the week.
 - **Subtasks:**
-  - [ ] Create input form for users to submit their predictions
+  - [x] Create input form for users to submit their predictions
   - [ ] Implement validation to ensure predictions fall within the specified time window
-  - [ ] Store user predictions in a PostgreSQL database
+  - [x] Store user predictions in database
 - **Notes:** Users can only enter predictions between the close on Friday and the open on Monday before the predicted Friday close.
 
 ### Task 5: Real-time Update of Leaderboard and S&P500 Index

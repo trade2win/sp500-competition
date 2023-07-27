@@ -7,7 +7,6 @@ const session = require("express-session"); // Creates a session middleware for 
 
 // Import local libraries
 const passport = require("./passport"); // Passport is authentication middleware for Node.js
-const userService = require("./services/userService"); // Import the local database connection/configuration
 
 // Import middleware and routes
 const attachUser = require("./middleware/attachUser"); // Middleware to attach the user object to the response

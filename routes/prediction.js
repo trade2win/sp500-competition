@@ -1,32 +1,45 @@
 const express = require("express");
 const router = express.Router();
-const { addPrediction } = require("../services/predictionService");
+const { createPrediction, findPrediction } = require("../database/predictions");
 const { ensureAuthenticated } = require("../middleware/ensureAuthenticated");
+const { getCurrentTimeData } = require("../utils");
 
-// Prediction page
-// router.get("/", function (request, response) {
-//   const viewParameters = {
-//     user: request.user,
-//     title: "Welcome to Trade2Win S&P 500 Competition",
-//   };
-//   response.render("pages/prediction", viewParameters);
-// });
+router.get("/", ensureAuthenticated, async (req, res) => {
+  const userId = req.user.id;
 
-router.get("/", ensureAuthenticated, (req, res) => {
-  res.render("prediction");
+  const dateInfo = getCurrentTimeData(new Date());
+  const { weekOfYear, weekOfMonth, month, year } = dateInfo;
+
+  const prediction = await findPrediction(userId, weekOfYear, year);
+
+  if (prediction) {
+    res.render("pages/prediction", { user: req.user, predictionExists: true });
+  } else {
+    res.render("pages/prediction", { user: req.user, predictionExists: false });
+  }
 });
-router.post("/", ensureAuthenticated, (req, res) => {
-  const prediction = req.body.prediction;
-  const userId = req.user.providerId;
 
-  addPrediction(userId, prediction, (err) => {
-    if (err) {
-      console.error(err);
-      res.redirect("/prediction");
-    } else {
-      res.redirect("/");
-    }
-  });
+router.post("/", ensureAuthenticated, async (req, res) => {
+  const forecast = parseFloat(req.body.forecast);
+  const userId = req.user.id; // Use the 'id' not the 'providerId'.
+
+  const dateInfo = getCurrentTimeData(new Date());
+  const { weekOfYear, weekOfMonth, month, year } = dateInfo;
+
+  try {
+    await createPrediction(
+      userId,
+      forecast,
+      weekOfYear,
+      weekOfMonth,
+      month,
+      year
+    );
+    res.redirect("/");
+  } catch (error) {
+    console.error(error);
+    res.redirect("/prediction");
+  }
 });
 
 module.exports = router;

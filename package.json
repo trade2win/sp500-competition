@@ -6,7 +6,10 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon server.js",
-    "test": "jest --coverage"
+    "test": "jest --coverage",
+    "clear": "node database/clear.js",
+    "seed": "node database/seed.js",
+    "migrate": "npx prisma migrate dev"
   },
   "repository": {
     "type": "git",
@@ -20,6 +23,7 @@
   },
   "homepage": "https://github.com/trade2win/sp500-competition#readme",
   "dependencies": {
+    "@prisma/client": "^5.0.0",
     "@types/node": "^18.0.6",
     "axios": "^1.4.0",
     "body-parser": "^1.20.2",
@@ -37,6 +41,7 @@
   },
   "devDependencies": {
     "jest": "^29.6.1",
+    "prisma": "^5.0.0",
     "sqlite3": "^5.1.6"
   }
 }

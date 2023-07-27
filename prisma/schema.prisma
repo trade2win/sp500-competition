@@ -1,0 +1,40 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            Int      @id @default(autoincrement())
+  providerId    Int   @unique
+  username      String
+  accessToken   String
+  refreshToken  String
+  forecasts    Forecast[] 
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+}
+
+model Forecast {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  forecast  Float
+  weekOfYear Int
+  weekOfMonth Int
+  month     Int
+  year      Int
+  points    Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([weekOfYear, year], name: "week_year_idx")
+  @@index([month, year], name: "month_year_idx")
+}

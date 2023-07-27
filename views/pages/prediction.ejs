@@ -1,7 +1,11 @@
 <%- include('../partials/header', {user: user}); %>
 <h1>Predict where the S&P500 will finish in the coming week:</h1>
+
+<% if (!predictionExists) { %>
 <form action="/prediction" method="POST">
-  <input type="text" name="prediction" placeholder="Prediction" />
+  <input type="text" name="forecast" placeholder="Prediction" />
   <input type="submit" value="OK" />
 </form>
-<%- include('../partials/footer'); %>
+<% } else { %>
+<p>You've already submitted a prediction for this week!</p>
+<% } %> <%- include('../partials/footer'); %>

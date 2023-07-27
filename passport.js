@@ -3,8 +3,9 @@ const passport = require("passport"); // Passport is authentication middleware f
 const OAuth2Strategy = require("passport-oauth2").Strategy; // OAuth 2.0 is an authorization protocol
 const axios = require("axios"); // Axios is a promise-based HTTP client for the browser and Node.js
 
-// Import local libraries
-const userService = require("./services/userService"); // Import the local database connection/configuration
+// Import prisma
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
 
 // Use the OAuth 2.0 strategy within Passport
 passport.use(
@@ -18,7 +19,7 @@ passport.use(
       clientSecret: process.env.CLIENT_SECRET,
       callbackURL: process.env.CALLBACK_URL,
     },
-    function (accessToken, refreshToken, params, done) {
+    async function (accessToken, refreshToken, params, profile, done) {
       // Define the function that will be called once the OAuth flow is complete
       // This function is passed the `accessToken` and `refreshToken` obtained from the authorization server
 
@@ -34,26 +35,29 @@ passport.use(
       // Retrieve user information from the authorization server
       website
         .get("/me")
-        .then((response) => {
+        .then(async (response) => {
           const userData = response.data.me;
 
           // Use the retrieved user information to find or create a user in the local database
-          userService.findOrCreate(
-            {
+          const user = await prisma.user.upsert({
+            where: { providerId: userData.user_id },
+            update: {
+              username: userData.username,
+              accessToken: accessToken,
+              refreshToken: refreshToken,
+            },
+            create: {
               providerId: userData.user_id,
               username: userData.username,
               accessToken: accessToken,
               refreshToken: refreshToken,
             },
-            function (err, user) {
-              // Pass the user information to the `done` callback
-              return done(err, user);
-            }
-          );
+          });
+
+          return done(null, user);
         })
         .catch((err) => {
           console.error(err);
-          // Pass the error to the `done` callback
           done(err);
         });
     }
@@ -66,10 +70,11 @@ passport.serializeUser(function (user, done) {
 });
 
 // Register a function that tells Passport how to deserialize users
-passport.deserializeUser(function (id, done) {
-  userService.findById(id, function (err, user) {
-    done(err, user);
+passport.deserializeUser(async function (id, done) {
+  const user = await prisma.user.findUnique({
+    where: { id: id },
   });
+  done(null, user);
 });
 
 // Export the configured Passport

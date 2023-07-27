@@ -1,8 +1,27 @@
 <%- include('../partials/header', {user: user}); %>
-<!-- A note about .ejs: everything inside of these symbols: <%=  %> will be executed as JavaScript.  -->
 
-<!-- This adds an h1 tag which contains the title property the input object -->
 <h1><%= title %></h1>
-<!-- This adds a regular old paragraph tag -->
 <h1>The current price is <%= sp500Price %></h1>
-<%- include('../partials/footer'); %>
+
+<% if (predictions.length > 0) { %>
+<table>
+  <thead>
+    <tr>
+      <th>User</th>
+      <th>Date</th>
+      <th>Prediction</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% predictions.forEach(prediction => { %>
+    <tr>
+      <td><%= prediction.user.username %></td>
+      <td><%= new Date(prediction.createdAt).toLocaleDateString() %></td>
+      <td><%= prediction.forecast %></td>
+    </tr>
+    <% }) %>
+  </tbody>
+</table>
+<% } else { %>
+<p>No predictions made yet.. be the <a href="/prediction">first</a>!</p>
+<% } %> <%- include('../partials/footer'); %>
