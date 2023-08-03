@@ -17,7 +17,10 @@ async function main() {
   // If no User records exist, seed the User data
   if (count === 0) {
     // Load the User data from the JSON file
-    const userData = JSON.parse(fs.readFileSync("User.json", "utf-8"));
+    const userData = JSON.parse(
+      fs.readFileSync(path.join(__dirname, "User.json"), "utf-8")
+    );
+
     // Delete any existing User records (there should be none)
     await prisma.user.deleteMany();
     // Iterate over the User data and create each User in the database
@@ -39,7 +42,7 @@ async function main() {
   count = await prisma.prediction.count();
   if (count === 0) {
     const predictionData = JSON.parse(
-      fs.readFileSync("Prediction.json", "utf-8")
+      fs.readFileSync(path.join(__dirname, "Prediction.json"), "utf-8")
     );
     await prisma.prediction.deleteMany();
     for (const prediction of predictionData) {
@@ -59,7 +62,7 @@ async function main() {
   count = await prisma.weeklyScore.count();
   if (count === 0) {
     const weeklyScoreData = JSON.parse(
-      fs.readFileSync("WeeklyScore.json", "utf-8")
+      fs.readFileSync(path.join(__dirname, "WeeklyScore.json"), "utf-8")
     );
     await prisma.weeklyScore.deleteMany();
     for (const weeklyScore of weeklyScoreData) {
@@ -79,7 +82,7 @@ async function main() {
   count = await prisma.weeklyPriceHistory.count();
   if (count === 0) {
     const weeklyPriceHistoryData = JSON.parse(
-      fs.readFileSync("WeeklyPriceHistory.json", "utf-8")
+      fs.readFileSync(path.join(__dirname, "WeeklyPriceHistory.json"), "utf-8")
     );
     await prisma.weeklyPriceHistory.deleteMany();
     for (const WeeklyPriceHistory of weeklyPriceHistoryData) {
