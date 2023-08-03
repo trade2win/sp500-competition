@@ -10,7 +10,7 @@
   <tbody>
     <% predictions.forEach(user => { %>
     <tr>
-      <td><%= user.name %></td>
+      <td><a href="https://www.trade2win.com/members/<%= user.xenforo_id %>/" target="_blank"><%= user.name %></a></td>
       <% weekNumbers.forEach(weekNumber => { const prediction =
       user.predictions[weekNumber]; let bgColorClass = ''; let textColorClass =
       ''; let fontWeightClass = ''; if (prediction) { textColorClass =

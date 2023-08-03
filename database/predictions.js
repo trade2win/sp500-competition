@@ -203,6 +203,7 @@ async function findQuarterPredictions(year, quarter) {
       quarterPredictions.push({
         id: prediction.user_id,
         name: prediction.user.username,
+        xenforo_id: prediction.user.xenforo_id,
         predictions: {
           [prediction.week]: { ...prediction, weeklyScore: score },
         },
