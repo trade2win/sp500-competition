@@ -55,8 +55,25 @@ app.use(passport.session());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Define our contentSecurityPolicy
+const cspDirectives = {
+  directives: {
+    "default-src": ["'self'"],
+    "script-src": ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"],
+    "style-src": ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"],
+    "font-src": ["'self'"],
+    "img-src": ["'self'"],
+    "form-action": [
+      "'self'",
+      "https://www.trade2win.com/audapi/oauth2/authorize",
+    ], // Add your OAuth2 provider URL
+  },
+};
+
 // Set security-related headers to protect your app from various web attacks.
 app.use(helmet());
+// Use helmet with your custom CSP settings
+app.use(helmet.contentSecurityPolicy(cspDirectives));
 
 // Add middleware to attach the user object to every view if the user is authenticated
 app.use(attachUser);
