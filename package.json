@@ -10,8 +10,7 @@
     "clear": "node database/clear.js",
     "seed": "node database/seed.js",
     "migrate:dev": "npx prisma migrate dev",
-    "migrate:deploy": "npx prisma migrate deploy",
-    "heroku-postbuild": "if [ \"$NODE_ENV\" = \"production\" ]; then cp prisma/schema.prisma.prod prisma/schema.prisma; else cp prisma/schema.prisma.dev prisma/schema.prisma; fi"
+    "migrate:deploy": "npx prisma migrate deploy"
   },
   "repository": {
     "type": "git",
