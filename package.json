@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "prebuild": "npm run select-schema",
+    "select-schema": "if [ \"$NODE_ENV\" = \"production\" ]; then cp prisma/schema.prisma.prod prisma/schema.prisma; else cp prisma/schema.prisma.dev prisma/schema.prisma; fi",
     "start": "node index.js",
     "dev": "nodemon server.js",
     "test": "jest --coverage",

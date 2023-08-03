@@ -1,0 +1,71 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = env("postgresql")
+  url      = env("DATABASE_URL")
+} 
+
+model User {
+  id            Int      @id @default(autoincrement())
+  xenforo_id    Int      @unique
+  username      String
+  access_token  String?
+  refresh_token String?
+  predictions   Prediction[] 
+  weekly_scores WeeklyScore[]
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+}
+model Prediction {
+  id          Int      @id @default(autoincrement())
+  user_id     Int
+  prediction  Float
+  direction   Int      @default(0) // 1 for 'UP', -1 for 'DOWN', 0 for undefined
+  week        Int
+  year        Int
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  user        User     @relation(fields: [user_id], references: [id])
+
+  @@unique([user_id, week, year], name: "user_week_year_uidx")
+  @@index([week, year], name: "week_year_idx")
+}
+
+model WeeklyScore {
+  id              Int     @id @default(autoincrement())
+  user_id         Int
+  direction_points Int
+  medal_points    Int
+  week            Int
+  year            Int
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
+
+  user            User    @relation(fields: [user_id], references: [id])
+
+  // Unique constraint for user_id, week, and year
+  @@unique([user_id, week, year], name: "user_week_year_uidx_scores")
+  @@index([week, year], name: "week_year_idx_scores")
+}
+
+
+model WeeklyPriceHistory {
+  id            Int      @id @default(autoincrement())
+  date          DateTime
+  index_name    String
+  open          Float
+  close         Float
+  previous_close Float
+  high          Float
+  low           Float
+  week          Int
+  year          Int
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+
+  @@index([week, year], name: "week_year_idx_history")
+  @@index([date, index_name], name: "date_index_idx")
+}
