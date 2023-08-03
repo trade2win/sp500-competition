@@ -4,15 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "prebuild": "npm run select-schema",
-    "select-schema": "if [ \"$NODE_ENV\" = \"production\" ]; then cp prisma/schema.prisma.prod prisma/schema.prisma; else cp prisma/schema.prisma.dev prisma/schema.prisma; fi",
     "start": "node index.js",
     "dev": "nodemon server.js",
     "test": "jest --coverage",
     "clear": "node database/clear.js",
     "seed": "node database/seed.js",
     "migrate:dev": "npx prisma migrate dev",
-    "migrate:deploy": "npx prisma migrate deploy"
+    "migrate:deploy": "npx prisma migrate deploy",
+    "heroku-postbuild": "if [ \"$NODE_ENV\" = \"production\" ]; then cp prisma/schema.prisma.prod prisma/schema.prisma; else cp prisma/schema.prisma.dev prisma/schema.prisma; fi"
   },
   "repository": {
     "type": "git",
