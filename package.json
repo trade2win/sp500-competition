@@ -9,7 +9,8 @@
     "test": "jest --coverage",
     "clear": "node database/clear.js",
     "seed": "node database/seed.js",
-    "migrate": "npx prisma migrate dev"
+    "migrate:dev": "npx prisma migrate dev",
+    "migrate:deploy": "npx prisma migrate deploy"
   },
   "repository": {
     "type": "git",

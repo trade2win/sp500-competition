@@ -1,66 +1,56 @@
-// seed.js
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
-const { getCurrentTimeData } = require("../services/predictionScoring");
-const { updateWeek } = require("../services/predictionScoring");
+const fs = require("fs");
 
 async function main() {
-  if (
-    process.env.NODE_ENV !== "development" &&
-    process.env.NODE_ENV !== "test"
-  ) {
-    console.error("Seeding is only allowed in development or test mode.");
-    process.exit(1);
+  const userData = JSON.parse(fs.readFileSync("User.json", "utf-8"));
+
+  for (const user of userData) {
+    await prisma.user.create({
+      data: user,
+    });
   }
 
-  await prisma.prediction.deleteMany();
-  await prisma.user.deleteMany();
+  console.log(`Seeded ${userData.length} users`);
 
-  // Create some dummy users
-  const user1 = await prisma.user.create({
-    data: {
-      xenforo_id: 1,
-      username: "User 1",
-      access_token: "access_token1",
-      refresh_token: "refresh_token1",
-    },
-  });
+  // Prediction
+  const predictionData = JSON.parse(
+    fs.readFileSync("Prediction.json", "utf-8")
+  );
 
-  const user2 = await prisma.user.create({
-    data: {
-      xenforo_id: 2,
-      username: "User 2",
-      access_token: "access_token2",
-      refresh_token: "refresh_token2",
-    },
-  });
+  for (const prediction of predictionData) {
+    await prisma.prediction.create({
+      data: prediction,
+    });
+  }
 
-  const dateInfo = getCurrentTimeData(new Date(2023, 1, 7)); // February 7, 2023
+  console.log(`Seeded ${prediction.length} predictions`);
 
-  // Create some dummy predictions
-  await prisma.prediction.create({
-    data: {
-      user_id: user1.id,
-      prediction: 5000.0,
-      week: dateInfo.week,
-      week_of_month: dateInfo.week_of_month,
-      month: dateInfo.month,
-      year: dateInfo.year,
-      points: 0,
-    },
-  });
+  // WeeklyScore
+  const weeklyScoreData = JSON.parse(
+    fs.readFileSync("WeeklyScore.json", "utf-8")
+  );
 
-  await prisma.prediction.create({
-    data: {
-      user_id: user2.id,
-      prediction: 6000.0,
-      week: dateInfo.week,
-      week_of_month: dateInfo.week_of_month,
-      month: dateInfo.month,
-      year: dateInfo.year,
-      points: 0,
-    },
-  });
+  for (const weeklyScore of weeklyScoreData) {
+    await prisma.weeklyscore.create({
+      data: weeklyScore,
+    });
+  }
+
+  console.log(`Seeded ${weeklyScoreData.length} weeklyScoreData`);
+
+  // WeeklyPriceHistory
+  const weeklyPriceHistoryData = JSON.parse(
+    fs.readFileSync("WeeklyPriceHistory.json", "utf-8")
+  );
+
+  for (const WeeklyPriceHistory of weeklyPriceHistoryData) {
+    await prisma.weeklypricehistory.create({
+      data: WeeklyPriceHistory,
+    });
+  }
+
+  console.log(`Seeded ${weeklyPriceHistoryData.length} WeeklyPriceHistory`);
 }
 
 main()
