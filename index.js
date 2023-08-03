@@ -9,6 +9,9 @@ dotenv.config({ path: path.resolve(__dirname, `.env.${env}`) });
 const express = require("express"); // Express is a minimalist web framework for Node.js
 const session = require("express-session"); // Creates a session middleware for setting up session cookies
 
+// Helmet is one of the most popular and widely used middleware for securing HTTP headers in Node.js/Express applications.
+const helmet = require("helmet");
+
 // Import local libraries
 const passport = require("./middleware/passport"); // Passport is authentication middleware for Node.js
 
@@ -51,6 +54,9 @@ app.use(passport.session());
 // Middleware for parsing incoming requests with JSON and URL-encoded payloads
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Set security-related headers to protect your app from various web attacks.
+app.use(helmet());
 
 // Add middleware to attach the user object to every view if the user is authenticated
 app.use(attachUser);
