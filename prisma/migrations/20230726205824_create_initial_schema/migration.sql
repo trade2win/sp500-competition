@@ -13,7 +13,7 @@ CREATE TABLE "User" (
 CREATE TABLE "Forecast" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "userId" INTEGER NOT NULL,
-    "forecast" REAL NOT NULL,
+    "prediction" REAL NOT NULL,
     "week" INTEGER NOT NULL,
     "year" INTEGER NOT NULL,
     "points" INTEGER NOT NULL DEFAULT 0,

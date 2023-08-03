@@ -1,56 +1,38 @@
-h1 {
-  color: #ffbb22;
-  font-size: 28px;
-}
-
-.number {
-  color: green;
-  font-weight: bold;
-}
-
-p {
-  color: #3b73cc;
-  font-size: 14px;
-}
-
 body {
-  padding: 20px;
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
 }
 
-a {
-  color: #222222;
+footer {
+  margin-top: auto;
 }
 
-.menuBar {
-  width: 100%;
-  padding: 10px;
-  background-color: #faa916;
+/* Custom CSS to change the table header background color */
+.table th.t2w-bg {
+  background-color: #a40000;
+  color: white;
 }
 
-.menuLink {
-  padding: 10px;
-  text-decoration: none;
-  font-size: 18px;
+.table td.bg-gold {
+  background-color: #ffd700;
+  color: black;
 }
 
-.menuLink:hover {
-  background-color: #fdc55e;
+.table td.bg-silver {
+  background-color: #c0c0c0;
+  color: black;
 }
 
-.postCell {
-  width: 80%;
-  background-color: #edf5fa;
-  height: 70px;
-  border-radius: 10px;
-  padding: 12px;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 14px;
-  line-height: 20px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.table td.bg-bronze {
+  background-color: #cd7f32;
+  color: black;
 }
 
-.postCell:hover {
-  background-color: #cfdbe3;
+.text-danger {
+  color: red;
+}
+
+.fw-bold {
+  font-weight: bold;
 }

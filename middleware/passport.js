@@ -19,15 +19,15 @@ passport.use(
       clientSecret: process.env.CLIENT_SECRET,
       callbackURL: process.env.CALLBACK_URL,
     },
-    async function (accessToken, refreshToken, params, profile, done) {
+    async function (access_token, refresh_token, params, profile, done) {
       // Define the function that will be called once the OAuth flow is complete
-      // This function is passed the `accessToken` and `refreshToken` obtained from the authorization server
+      // This function is passed the `access_token` and `refresh_token` obtained from the authorization server
 
       // Create an Axios instance with default settings
       const website = axios.create({
         baseURL: "https://www.trade2win.com/api/",
         headers: {
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${access_token}`,
           "Content-Type": "application/x-www-form-urlencoded",
         },
       });
@@ -40,17 +40,17 @@ passport.use(
 
           // Use the retrieved user information to find or create a user in the local database
           const user = await prisma.user.upsert({
-            where: { providerId: userData.user_id },
+            where: { xenforo_id: userData.user_id },
             update: {
               username: userData.username,
-              accessToken: accessToken,
-              refreshToken: refreshToken,
+              access_token: access_token,
+              refresh_token: refresh_token,
             },
             create: {
-              providerId: userData.user_id,
+              xenforo_id: userData.user_id,
               username: userData.username,
-              accessToken: accessToken,
-              refreshToken: refreshToken,
+              access_token: access_token,
+              refresh_token: refresh_token,
             },
           });
 

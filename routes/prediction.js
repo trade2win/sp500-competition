@@ -2,15 +2,15 @@ const express = require("express");
 const router = express.Router();
 const { createPrediction, findPrediction } = require("../database/predictions");
 const { ensureAuthenticated } = require("../middleware/ensureAuthenticated");
-const { getCurrentTimeData } = require("../utils");
+const { getCurrentTimeData } = require("../services/dateHelpers");
 
 router.get("/", ensureAuthenticated, async (req, res) => {
-  const userId = req.user.id;
+  const user_id = req.user.id;
 
   const dateInfo = getCurrentTimeData(new Date());
-  const { weekOfYear, weekOfMonth, month, year } = dateInfo;
+  const { week, month, quarter, year } = dateInfo;
 
-  const prediction = await findPrediction(userId, weekOfYear, year);
+  const prediction = await findPrediction(user_id, week, year);
 
   if (prediction) {
     res.render("pages/prediction", { user: req.user, predictionExists: true });
@@ -20,21 +20,14 @@ router.get("/", ensureAuthenticated, async (req, res) => {
 });
 
 router.post("/", ensureAuthenticated, async (req, res) => {
-  const forecast = parseFloat(req.body.forecast);
-  const userId = req.user.id; // Use the 'id' not the 'providerId'.
+  const prediction = parseFloat(req.body.prediction);
+  const user_id = req.user.id; // Use the 'id' not the 'xenforo_id'.
 
   const dateInfo = getCurrentTimeData(new Date());
-  const { weekOfYear, weekOfMonth, month, year } = dateInfo;
+  const { week, month, quarter, year } = dateInfo;
 
   try {
-    await createPrediction(
-      userId,
-      forecast,
-      weekOfYear,
-      weekOfMonth,
-      month,
-      year
-    );
+    await createPrediction(user_id, prediction, week, month, quarter, year);
     res.redirect("/");
   } catch (error) {
     console.error(error);

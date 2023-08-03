@@ -1,0 +1,62 @@
+<table class="table table-striped">
+  <thead class="bg-dark text-white">
+    <tr>
+      <th class="t2w-bg">User</th>
+      <% weekNumbers.forEach(weekNumber => { %>
+      <th class="t2w-bg">Week <%= weekNumber %></th>
+      <% }) %>
+    </tr>
+  </thead>
+  <tbody>
+    <% predictions.forEach(user => { %>
+    <tr>
+      <td><%= user.name %></td>
+      <% weekNumbers.forEach(weekNumber => { const prediction =
+      user.predictions[weekNumber]; let bgColorClass = ''; let textColorClass =
+      ''; let fontWeightClass = ''; if (prediction) { textColorClass =
+      prediction.direction === -1 ? 'text-danger' : ''; if
+      (prediction.weeklyScore) { switch (prediction.weeklyScore.medal_points) {
+      case 3: bgColorClass = 'bg-gold'; break; case 2: bgColorClass =
+      'bg-silver'; break; case 1: bgColorClass = 'bg-bronze'; break; }
+      fontWeightClass = prediction.weeklyScore.direction_points > 0 ? 'fw-bold'
+      : ''; } } %>
+      <td
+        class="<%= bgColorClass %> <%= textColorClass %> <%= fontWeightClass %>"
+        data-prediction="<%= JSON.stringify(prediction) %>"
+      >
+        <%= (prediction && prediction.prediction) || '' %>
+      </td>
+      <% }) %>
+    </tr>
+    <% }) %>
+  </tbody>
+</table>
+<div class="mt-4 text-center">
+  <h4>Key</h4>
+  <table class="mx-auto">
+    <tr>
+      <td style="text-align: left">↑</td>
+      <td style="text-align: left">Up direction</td>
+    </tr>
+    <tr>
+      <td style="text-align: left; color: red">↓</td>
+      <td style="text-align: left; color: red">Down direction</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">✔️</td>
+      <td style="text-align: left"><strong>Correct direction</strong></td>
+    </tr>
+    <tr>
+      <td style="text-align: left; background-color: gold">🥇</td>
+      <td style="text-align: left; background-color: gold">1st Place</td>
+    </tr>
+    <tr>
+      <td style="text-align: left; background-color: silver">🥈</td>
+      <td style="text-align: left; background-color: silver">2nd Place</td>
+    </tr>
+    <tr>
+      <td style="text-align: left; background-color: #cd7f32"">🥉</td>
+      <td style="text-align: left; background-color: #cd7f32">3rd Place</td>
+    </tr>
+  </table>
+</div>

@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const passport = require("../passport"); // Use passport for authentication
+const passport = require("../middleware/passport"); // Use passport for authentication
 
 // Add routes for authentication
 // routes for initiating the authentication process

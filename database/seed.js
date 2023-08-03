@@ -1,7 +1,8 @@
 // seed.js
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
-const { getCurrentTimeData } = require("../utils");
+const { getCurrentTimeData } = require("../services/predictionScoring");
+const { updateWeek } = require("../services/predictionScoring");
 
 async function main() {
   if (
@@ -12,49 +13,49 @@ async function main() {
     process.exit(1);
   }
 
-  await prisma.forecast.deleteMany();
+  await prisma.prediction.deleteMany();
   await prisma.user.deleteMany();
 
   // Create some dummy users
   const user1 = await prisma.user.create({
     data: {
-      providerId: 1,
+      xenforo_id: 1,
       username: "User 1",
-      accessToken: "accessToken1",
-      refreshToken: "refreshToken1",
+      access_token: "access_token1",
+      refresh_token: "refresh_token1",
     },
   });
 
   const user2 = await prisma.user.create({
     data: {
-      providerId: 2,
+      xenforo_id: 2,
       username: "User 2",
-      accessToken: "accessToken2",
-      refreshToken: "refreshToken2",
+      access_token: "access_token2",
+      refresh_token: "refresh_token2",
     },
   });
 
   const dateInfo = getCurrentTimeData(new Date(2023, 1, 7)); // February 7, 2023
 
-  // Create some dummy forecasts
-  await prisma.forecast.create({
+  // Create some dummy predictions
+  await prisma.prediction.create({
     data: {
-      userId: user1.id,
-      forecast: 5000.0,
-      weekOfYear: dateInfo.weekOfYear,
-      weekOfMonth: dateInfo.weekOfMonth,
+      user_id: user1.id,
+      prediction: 5000.0,
+      week: dateInfo.week,
+      week_of_month: dateInfo.week_of_month,
       month: dateInfo.month,
       year: dateInfo.year,
       points: 0,
     },
   });
 
-  await prisma.forecast.create({
+  await prisma.prediction.create({
     data: {
-      userId: user2.id,
-      forecast: 6000.0,
-      weekOfYear: dateInfo.weekOfYear,
-      weekOfMonth: dateInfo.weekOfMonth,
+      user_id: user2.id,
+      prediction: 6000.0,
+      week: dateInfo.week,
+      week_of_month: dateInfo.week_of_month,
       month: dateInfo.month,
       year: dateInfo.year,
       points: 0,

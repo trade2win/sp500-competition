@@ -4,7 +4,9 @@ module.exports = {
   login: require("./login"),
   logout: require("./logout"),
   prediction: require("./prediction"),
+  results: require("./results"),
   auth: require("./auth"),
+  api: require("./yahooAPI"),
 };
 
 // REMINDER - The Request Object (res)

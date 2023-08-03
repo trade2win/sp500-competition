@@ -1,0 +1,30 @@
+<%- include('../partials/header', {user: user}); %>
+
+<h1>SP500 Results for Q<%= quarter %>, <%= year %></h1>
+<div class="d-flex justify-content-between my-3">
+  <button class="btn btn-primary" onclick="changeQuarter(-1)">
+    Previous Quarter
+  </button>
+  <button class="btn btn-primary" onclick="changeQuarter(1)">
+    Next Quarter
+  </button>
+</div>
+
+<script>
+  function changeQuarter(delta) {
+    let year = <%= year %>;
+    let quarter = <%= quarter %>;
+    quarter += delta;
+    if (quarter < 1) {
+      quarter = 4;
+      year--;
+    } else if (quarter > 4) {
+      quarter = 1;
+      year++;
+    }
+    window.location.href = `/results/${year}/Q${quarter}`;
+  }
+</script>
+<%- include('../partials/resultsTable', { predictions: predictions, quarter: quarter, year: year, weekNumbers: weekNumbers }); %>
+
+<%- include('../partials/footer'); %>

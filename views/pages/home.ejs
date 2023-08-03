@@ -3,25 +3,6 @@
 <h1><%= title %></h1>
 <h1>The current price is <%= sp500Price %></h1>
 
-<% if (predictions.length > 0) { %>
-<table>
-  <thead>
-    <tr>
-      <th>User</th>
-      <th>Date</th>
-      <th>Prediction</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% predictions.forEach(prediction => { %>
-    <tr>
-      <td><%= prediction.user.username %></td>
-      <td><%= new Date(prediction.createdAt).toLocaleDateString() %></td>
-      <td><%= prediction.forecast %></td>
-    </tr>
-    <% }) %>
-  </tbody>
-</table>
-<% } else { %>
-<p>No predictions made yet.. be the <a href="/prediction">first</a>!</p>
-<% } %> <%- include('../partials/footer'); %>
+<%- include('../partials/resultsTable', { predictions: predictions, quarter:
+quarter, year: year, weekNumbers: weekNumbers }); %> <%-
+include('../partials/footer'); %>

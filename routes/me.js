@@ -6,12 +6,12 @@ const { ensureAuthenticated } = require("../middleware/ensureAuthenticated");
 
 router.get("/", ensureAuthenticated, (req, res) => {
   const user = req.user;
-  const accessToken = user.accessToken;
+  const access_token = user.access_token;
 
   const website = axios.create({
     baseURL: "https://www.trade2win.com/api/",
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: `Bearer ${access_token}`,
       "Content-Type": "application/x-www-form-urlencoded",
     },
   });

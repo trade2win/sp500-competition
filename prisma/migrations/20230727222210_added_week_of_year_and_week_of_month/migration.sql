@@ -12,7 +12,7 @@ PRAGMA foreign_keys=OFF;
 CREATE TABLE "new_Forecast" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "userId" INTEGER NOT NULL,
-    "forecast" REAL NOT NULL,
+    "prediction" REAL NOT NULL,
     "weekOfYear" INTEGER NOT NULL,
     "weekOfMonth" INTEGER NOT NULL,
     "month" INTEGER NOT NULL,
@@ -22,7 +22,7 @@ CREATE TABLE "new_Forecast" (
     "updatedAt" DATETIME NOT NULL,
     CONSTRAINT "Forecast_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
-INSERT INTO "new_Forecast" ("createdAt", "forecast", "id", "points", "updatedAt", "userId", "year") SELECT "createdAt", "forecast", "id", "points", "updatedAt", "userId", "year" FROM "Forecast";
+INSERT INTO "new_Forecast" ("createdAt", "prediction", "id", "points", "updatedAt", "userId", "year") SELECT "createdAt", "prediction", "id", "points", "updatedAt", "userId", "year" FROM "Forecast";
 DROP TABLE "Forecast";
 ALTER TABLE "new_Forecast" RENAME TO "Forecast";
 CREATE INDEX "week_year_idx" ON "Forecast"("weekOfYear", "year");

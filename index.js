@@ -1,12 +1,21 @@
 // Bring in environment variables from a .env file
-require("dotenv").config();
+const dotenv = require("dotenv");
+const path = require("path");
+
+const env = process.env.NODE_ENV || "development";
+dotenv.config({ path: path.resolve(__dirname, `.env.${env}`) });
 
 // Import core libraries
 const express = require("express"); // Express is a minimalist web framework for Node.js
 const session = require("express-session"); // Creates a session middleware for setting up session cookies
 
 // Import local libraries
-const passport = require("./passport"); // Passport is authentication middleware for Node.js
+const passport = require("./middleware/passport"); // Passport is authentication middleware for Node.js
+
+// Import libraries that enable us to run a cron job
+const cron = require("node-cron");
+const moment = require("moment-timezone");
+const { updateLeaderboard } = require("./services/predictionScoring");
 
 // Import middleware and routes
 const attachUser = require("./middleware/attachUser"); // Middleware to attach the user object to the response
@@ -18,6 +27,10 @@ const app = express();
 // Setup view engine
 app.set("views", "views"); // Set the directory for Express.js to find EJS template files
 app.set("view engine", "ejs"); // Set the view engine to EJS for dynamic content generation
+
+if (app.get("env") === "production") {
+  app.set("view cache", true);
+}
 
 // Setup static files directory
 app.use(express.static("public"));
@@ -48,7 +61,21 @@ app.use("/me", routes.me);
 app.use("/login", routes.login);
 app.use("/logout", routes.logout);
 app.use("/prediction", routes.prediction);
+app.use("/results", routes.results);
 app.use("/auth", routes.auth);
+app.use("/api/historical", routes.api);
+
+// Check every minute if current time is 10:30 PM Saturday in UK time
+cron.schedule("* * * * *", () => {
+  const currentUKTime = moment().tz("Europe/London");
+  if (
+    currentUKTime.day() === 6 &&
+    currentUKTime.hour() === 22 &&
+    currentUKTime.minute() === 30
+  ) {
+    updateLeaderboard();
+  }
+});
 
 // Start the server and listen for incoming requests on the specified port
 const port = process.env.PORT || 8000; // The port number to use (process.env.PORT if specified, otherwise 8000)
