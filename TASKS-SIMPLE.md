@@ -11,14 +11,16 @@ DONE
   - also need to check if you've already made a prediction and make sure
 - Mobile menu isn't in white and the table doesn't offer a scroller
 - redirect to ssl
+- Schedule the processing of scores at end of week
 
 TODO
 
-- Schedule the processing of scores at end of week
-
 Nice to Haves
 
+- If there's a problem getting the S&P500 price from yahoo then dont break the page, also cache this for at least a minute during market hours
+- Tidy up the github repo to make it ready to share
 - Add avatars
+- Automate T2W_Bot predictions by averaging the results, we'll need a weekly scheduled script to run to take all the predictions, average them and submit it.
 - Fix the mobile version
 - Show the cumulative score for the quarter
 - Logo for the site

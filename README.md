@@ -1,13 +1,14 @@
 # S&P 500 Weekly Competition on Trade2Win
 
-SP500 Competition is a weekly contest that is currently run on a thread in the forum, the latest one for 2023 is available in [this thread](https://www.trade2win.com/threads/s-p500-weekly-predictioning-competition-for-2023.241639/).
+SP500 Competition is a weekly contest that is currently run on a thread in the forum. You can access the latest build [here](https://contest.trade2win.com).
 
-You can access the latest build here: (https://sp500-contest-59ea8f845b9d.herokuapp.com/).
+## About the Project
 
-Nice bootstrap templates here:
-https://adminlte.io/blog/free-bootstrap-5-templates/
+This project uses Express.js for the server-side, EJS for the view engine and Prisma as the ORM for PostgreSQL. We use the Yahoo Finance API to fetch data. The application is hosted on Heroku.
 
 ## Installation
+
+Install the required packages using npm:
 
 ```bash
 npm install
@@ -15,35 +16,63 @@ npm install
 
 ## Usage
 
-```bash
-npm run dev // dev environment
-npm run start  // live production environment
-```
-
-## ORM
-
-We'll use Prisma as our ORM, if not we could use Sequelize. Or just vanilla sql. With an ORM we can easily store migrations in git and switch from sqlite to postgres.
-
-## Testing
-
-We're using [jest](https://jestjs.io/) for unit testing. In futurure can be used also
-for integration tests, mock functions, timer mocks.
-In future we might use [cypress](https://www.cypress.io/) for end to end testing.
+To run the application in a development environment:
 
 ```bash
-npm test
+npm run dev
 ```
 
-## To-DO List
+To run the application in a production environment:
 
-Please read the [Tasks List](./TASKS.md)
+```bash
+npm run start
+```
+
+## Database Migrations
+
+We're using Prisma for our database migrations. Here's how you can create and apply your migrations:
+
+```bash
+npm run migrate:dev     // to create a new migration
+npm run migrate:deploy  // to apply the migration
+```
+
+## Weekly Leaderboard Update
+
+We have a script, `weeklyScores.js`, that updates the leaderboard once a week. This script is designed to be run by Heroku Scheduler, but it can also be run manually if necessary.
+
+To run the script manually:
+
+```bash
+node scripts/weeklyScores.js
+```
+
+To set up the script to run automatically using Heroku Scheduler:
+
+1. Navigate to the [Heroku dashboard](https://dashboard.heroku.com/apps), select your application, and then select "Scheduler" under "Installed add-ons".
+2. Click on "Add new job".
+3. In the task field, enter `node scripts/weeklyScores.js`.
+4. In the frequency field, select "Every day at..." and choose 9:30pm UTC (the script itself checks that the current day is Friday before proceeding).
+5. Click on "Save Job".
+
+This will ensure the leaderboard is updated once a week on Friday.
+
+## Hosting on Heroku
+
+The application is hosted on Heroku and uses the PostgreSQL add-on for the database. The `Procfile` includes instructions for running migrations and seeding the database whenever a new release is deployed:
+
+```
+release: npx prisma migrate deploy && node database/seed.js
+web: npm start
+```
+
+## To-Do List
+
+Please read the [Tasks Simple List](./TASKS-SIMPLE.md)
 
 ## Contributing
 
-Pull requests are welcome. For major changes, please open an issue first
-to discuss what you would like to change.
-
-Please make sure to update tests as appropriate.
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change. Please make sure to update tests as appropriate.
 
 ## License
 
