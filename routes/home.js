@@ -34,7 +34,7 @@ router.get("/", async (req, res) => {
 
     const viewParameters = {
       user: req.user,
-      title: "Trade2Win S&P 500 Contest",
+      title: "S&P 500 Contest",
       sp500Price: sp500Price,
       predictions: predictions,
       previousClose: previousClose,

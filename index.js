@@ -12,6 +12,9 @@ const session = require("express-session"); // Creates a session middleware for 
 // Helmet is one of the most popular and widely used middleware for securing HTTP headers in Node.js/Express applications.
 const helmet = require("helmet");
 
+// Use Winston for logging (better than console.log)
+const logger = require("./logger");
+
 // Import local libraries
 const passport = require("./middleware/passport"); // Passport is authentication middleware for Node.js
 
@@ -108,5 +111,5 @@ cron.schedule("* * * * *", () => {
 // Start the server and listen for incoming requests on the specified port
 const port = process.env.PORT || 8000; // The port number to use (process.env.PORT if specified, otherwise 8000)
 app.listen(port, function () {
-  console.log("App listening on port: " + port); // Print the port number to the console
+  logger.debug("App listening on port: " + port); // Print the port number to the console
 });

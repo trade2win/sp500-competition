@@ -3,6 +3,7 @@ const fs = require("fs");
 const csv = require("csv-parser");
 const { PrismaClient } = require("@prisma/client");
 const { getDateOfISOWeek } = require("../services/dateHelpers.js");
+const logger = require("../logger");
 
 // Create a Prisma client
 const prisma = new PrismaClient();
@@ -33,7 +34,7 @@ stream.on("data", async (row) => {
 
       // Validate year and week values
       if (isNaN(year) || isNaN(week)) {
-        console.log(`Invalid year or week: year=${year}, week=${week}`);
+        logger.debug(`Invalid year or week: year=${year}, week=${week}`);
         continue;
       }
 
@@ -51,7 +52,7 @@ stream.on("data", async (row) => {
 
         // If there's no data for the previous week, skip to the next prediction
         if (!previousWeekClose) {
-          console.log(
+          logger.debug(
             `No price history data for week ${
               weekNumber - 1
             } of year ${yearNumber}`
@@ -94,5 +95,5 @@ stream.on("data", async (row) => {
 
 // Listen to the 'end' event on the stream, which fires when the entire CSV has been read
 stream.on("end", () => {
-  console.log("CSV file successfully processed");
+  logger.debug("CSV file successfully processed");
 });

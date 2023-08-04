@@ -1,5 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
 const { updateLeaderboardForWeek } = require("../services/predictionScoring");
+const logger = require("../logger");
 
 const prisma = new PrismaClient();
 
@@ -13,19 +14,19 @@ async function populateWeeklyScoreTable() {
     });
 
     if (!weeks || weeks.length === 0) {
-      console.log("No weeks found in predictions to process.");
+      logger.debug("No weeks found in predictions to process.");
       return;
     }
 
-    console.log(`Found ${weeks.length} distinct weeks in predictions`);
+    logger.debug(`Found ${weeks.length} distinct weeks in predictions`);
 
     // For each week, call the updateLeaderboardForWeek function to process predictions and update scores
     for (const { year, week } of weeks) {
-      console.log(`Processing week ${week} of year ${year}`);
+      logger.debug(`Processing week ${week} of year ${year}`);
       await updateLeaderboardForWeek(year, week);
     }
 
-    console.log("WeeklyScore table populated successfully!");
+    logger.debug("WeeklyScore table populated successfully!");
   } catch (error) {
     // Log any errors that occur during the process
     console.error("Failed to populate WeeklyScore table:", error);
@@ -36,5 +37,5 @@ async function populateWeeklyScoreTable() {
   }
 }
 
-console.log("Starting to populate WeeklyScore table");
+logger.debug("Starting to populate WeeklyScore table");
 populateWeeklyScoreTable();

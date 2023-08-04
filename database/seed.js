@@ -9,6 +9,7 @@ dotenv.config({ path: path.resolve(__dirname, `../.env.${env}`) });
 const { PrismaClient } = require("@prisma/client");
 const fs = require("fs");
 const prisma = new PrismaClient();
+const logger = require("../logger");
 
 async function main() {
   // Users
@@ -34,7 +35,7 @@ async function main() {
       });
     }
     // Log the number of Users that were seeded
-    console.log(`Seeded ${userData.length} users`);
+    logger.debug(`Seeded ${userData.length} users`);
   }
 
   // Predictions
@@ -54,7 +55,7 @@ async function main() {
         },
       });
     }
-    console.log(`Seeded ${predictionData.length} predictions`);
+    logger.debug(`Seeded ${predictionData.length} predictions`);
   }
 
   // WeeklyScores
@@ -74,7 +75,7 @@ async function main() {
         },
       });
     }
-    console.log(`Seeded ${weeklyScoreData.length} weeklyScores`);
+    logger.debug(`Seeded ${weeklyScoreData.length} weeklyScores`);
   }
 
   // WeeklyPriceHistory
@@ -95,7 +96,7 @@ async function main() {
         },
       });
     }
-    console.log(`Seeded ${weeklyPriceHistoryData.length} WeeklyPriceHistory`);
+    logger.debug(`Seeded ${weeklyPriceHistoryData.length} WeeklyPriceHistory`);
   }
 }
 

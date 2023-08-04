@@ -1,11 +1,12 @@
 const sqlite3 = require("sqlite3").verbose();
 const fs = require("fs");
+const logger = require("../logger");
 
 let db = new sqlite3.Database("./competition.db", (err) => {
   if (err) {
     console.error(err.message);
   }
-  console.log("Connected to the SQlite database.");
+  logger.debug("Connected to the SQlite database.");
 });
 
 db.serialize(() => {
@@ -14,7 +15,7 @@ db.serialize(() => {
       throw err;
     }
     fs.writeFileSync("User.json", JSON.stringify(rows));
-    console.log("User data written to User.json");
+    logger.debug("User data written to User.json");
   });
 });
 
@@ -24,7 +25,7 @@ db.serialize(() => {
       throw err;
     }
     fs.writeFileSync("Prediction.json", JSON.stringify(rows));
-    console.log("Prediction data written to Prediction.json");
+    logger.debug("Prediction data written to Prediction.json");
   });
 });
 
@@ -34,7 +35,7 @@ db.serialize(() => {
       throw err;
     }
     fs.writeFileSync("WeeklyScore.json", JSON.stringify(rows));
-    console.log("WeeklyScore data written to WeeklyScore.json");
+    logger.debug("WeeklyScore data written to WeeklyScore.json");
   });
 });
 
@@ -44,7 +45,7 @@ db.serialize(() => {
       throw err;
     }
     fs.writeFileSync("WeeklyPriceHistory.json", JSON.stringify(rows));
-    console.log("WeeklyPriceHistory data written to WeeklyPriceHistory.json");
+    logger.debug("WeeklyPriceHistory data written to WeeklyPriceHistory.json");
   });
 });
 
@@ -52,5 +53,5 @@ db.close((err) => {
   if (err) {
     console.error(err.message);
   }
-  console.log("Close the database connection.");
+  logger.debug("Close the database connection.");
 });

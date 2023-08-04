@@ -1,6 +1,7 @@
 const { PrismaClient } = require("@prisma/client");
 const { updateLeaderboardForWeek } = require("../services/predictionScoring");
 const { getCurrentTimeData } = require("../services/dateHelpers");
+const logger = require("../logger");
 
 const prisma = new PrismaClient();
 
@@ -11,16 +12,16 @@ async function updateCurrentWeekLeaderboard() {
 
     // Check if it's Friday (5)
     if (new Date().getDay() !== 5) {
-      console.log("Today is not Friday. Skipping leaderboard update.");
+      logger.info("Today is not Friday. Skipping leaderboard update.");
       return;
     }
 
-    console.log(
+    logger.debug(
       `Processing week ${currentTimeData.week} of year ${currentTimeData.year}`
     );
     await updateLeaderboardForWeek(currentTimeData.year, currentTimeData.week);
 
-    console.log("WeeklyScore for current week updated successfully!");
+    logger.info("WeeklyScore for current week updated successfully!");
   } catch (error) {
     // Log any errors that occur during the process
     console.error("Failed to update WeeklyScore for current week:", error);
@@ -31,5 +32,5 @@ async function updateCurrentWeekLeaderboard() {
   }
 }
 
-console.log("Starting to update WeeklyScore for current week");
+logger.info("Starting to update WeeklyScore for current week");
 updateCurrentWeekLeaderboard();

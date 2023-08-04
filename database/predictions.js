@@ -19,6 +19,7 @@ const prisma = new PrismaClient({
     },
   ],
 });
+const logger = require("../logger");
 
 // Creates a new prediction for a specific user, week, month, quarter, and year
 async function createPrediction(
@@ -114,7 +115,7 @@ async function findQuarterScores(year, quarter) {
 
   const weeks = quarterWeeks[quarter];
 
-  console.log(`Weeks for quarter ${quarter}: `, weeks);
+  logger.debug(`Weeks for quarter ${quarter}: ${weeks}`);
 
   // Find all weekly scores made in the specified quarter and year
   const scores = await prisma.weeklyScore.findMany({
@@ -134,7 +135,7 @@ async function findQuarterScores(year, quarter) {
     },
   });
 
-  console.log(
+  logger.debug(
     `Retrieved ${scores.length} scores for quarter ${quarter}, year ${year}`
   );
 
@@ -153,7 +154,7 @@ async function findQuarterPredictions(year, quarter) {
 
   const weeks = quarterWeeks[quarter];
 
-  console.log(`Weeks for quarter ${quarter}: `, weeks);
+  logger.debug(`Weeks for quarter ${quarter}: ${weeks}`);
 
   // Find all predictions made in the specified quarter and year
   const predictions = await prisma.prediction.findMany({
@@ -176,14 +177,14 @@ async function findQuarterPredictions(year, quarter) {
   // Get the scores for the same quarter and year
   const scores = await findQuarterScores(year, quarter);
 
-  console.log(
+  logger.debug(
     `Retrieved ${predictions.length} predictions and ${scores.length} scores for quarter ${quarter}, year ${year}`
   );
 
   // Group predictions by user and week, and merge with scores
   const quarterPredictions = [];
   predictions.forEach((prediction) => {
-    console.log(
+    logger.debug(
       `Processing prediction for user id ${prediction.user_id}, week ${prediction.week}`
     );
 
@@ -211,7 +212,7 @@ async function findQuarterPredictions(year, quarter) {
     }
   });
 
-  console.log(
+  logger.debug(
     `Formatted ${quarterPredictions.length} users' predictions for quarter ${quarter}, year ${year}`
   );
 

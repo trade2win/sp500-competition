@@ -2,10 +2,43 @@ body {
   display: flex;
   min-height: 100vh;
   flex-direction: column;
+  background-color: #f5f5f5;
 }
 
 footer {
   margin-top: auto;
+}
+
+a,
+a:link,
+a:visited,
+a:hover,
+a:active {
+  color: #2577b1;
+  text-decoration: none; /* removes the underline */
+}
+
+a:hover {
+  text-decoration: underline; /* adds underline on hover */
+}
+
+a.no-color-change,
+a.no-color-change:visited,
+a.no-color-change:hover,
+a.no-color-change:active {
+  color: inherit; /* inherits the color from the parent element */
+}
+
+/* Override color for navbar links */
+.navbar-dark .navbar-nav .nav-link,
+.navbar-dark .navbar-nav .nav-link:visited,
+.navbar-dark .navbar-nav .nav-link:hover,
+.navbar-dark .navbar-nav .nav-link:active,
+.navbar-dark .navbar-brand,
+.navbar-dark .navbar-brand:hover,
+.navbar-dark .navbar-brand:focus,
+.navbar-dark .navbar-brand:active {
+  color: #fff; /* white color */
 }
 
 /* Custom CSS to change the table header background color */

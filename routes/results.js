@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { findQuarterPredictions } = require("../database/predictions");
 const { getWeekNumbers } = require("../services/dateHelpers");
+const logger = require("../logger");
 
 router.get("/:year/Q:quarter", async (req, res) => {
   try {
@@ -12,7 +13,7 @@ router.get("/:year/Q:quarter", async (req, res) => {
     const quarterNumber = parseInt(quarter, 10);
 
     const predictions = await findQuarterPredictions(yearNumber, quarterNumber);
-    console.log(yearNumber, quarterNumber);
+    logger.debug(`${yearNumber} ${quarterNumber}`);
 
     const weekNumbers = getWeekNumbers(quarterNumber);
 

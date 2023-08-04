@@ -2,6 +2,7 @@
 const yahooFinance = require("yahoo-finance2").default;
 const { PrismaClient } = require("@prisma/client");
 const { getDateOfISOWeek } = require("./dateHelpers");
+const logger = require("../logger");
 
 // Create Prisma client
 const prisma = new PrismaClient();
@@ -19,7 +20,7 @@ const prisma = new PrismaClient();
 // so if you ask the API for data between these crossover, you'll get that week
 async function fetchHistoricalData(indexName, period1, interval) {
   const period2 = new Date(period1.getTime() + 7 * 24 * 60 * 60 * 1000);
-  console.log(`yahoo is getting ${period1}`);
+  logger.debug(`yahoo is getting ${period1}`);
   return await yahooFinance.historical(indexName, {
     period1,
     period2,
@@ -38,7 +39,7 @@ async function fetchHistoricalData(indexName, period1, interval) {
  * @param {number} week - Week of the year
  */
 async function updateWeek(year, week) {
-  console.log(`Updating week ${week} for year ${year}`);
+  logger.debug(`Updating week ${week} for year ${year}`);
 
   // Get the date corresponding to the start of the specified week of the year
   const date = getDateOfISOWeek(year, week);
@@ -64,14 +65,14 @@ async function updateWeek(year, week) {
 
   // Fetch historical data for the specified week from Yahoo Finance
   const historicalData = await fetchHistoricalData("^GSPC", period1, "1wk");
-  console.log(`Fetched historical data for week ${week} of ${year}`);
+  logger.debug(`Fetched historical data for week ${week} of ${year}`);
 
   // If we have data for the specified week
   if (historicalData.length > 0) {
     const weekData = historicalData[historicalData.length - 1];
 
     // add some logging
-    console.log(
+    logger.debug(
       `period1 is ${period1} and weekData is ${JSON.stringify(weekData)}`
     );
 
@@ -90,10 +91,10 @@ async function updateWeek(year, week) {
       },
     });
 
-    console.log(`Successfully updated data for week ${week} of ${year}`);
+    logger.debug(`Successfully updated data for week ${week} of ${year}`);
     return createdWeekData;
   } else {
-    console.log(`No data available for week ${week} of ${year}`);
+    logger.debug(`No data available for week ${week} of ${year}`);
   }
 }
 

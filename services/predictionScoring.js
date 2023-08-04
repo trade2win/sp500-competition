@@ -4,9 +4,11 @@ const { PrismaClient } = require("@prisma/client");
 // Initialize prisma client
 const prisma = new PrismaClient();
 
+const logger = require("../logger");
+
 // Delete existing scores for a given week and year
 async function deleteExistingScores(year, week) {
-  console.log(`Deleting existing scores for week ${week}, year ${year}`);
+  logger.debug(`Deleting existing scores for week ${week}, year ${year}`);
   // Deleting scores using Prisma's deleteMany operation
   await prisma.weeklyScore.deleteMany({
     where: { week, year },
@@ -15,7 +17,7 @@ async function deleteExistingScores(year, week) {
 
 // Retrieve predictions for a given week and year
 async function fetchPredictions(year, week) {
-  console.log(`Fetching predictions for week ${week}, year ${year}`);
+  logger.debug(`Fetching predictions for week ${week}, year ${year}`);
   // Fetching predictions using Prisma's findMany operation
   const predictions = await prisma.prediction.findMany({
     where: { week, year },
@@ -24,7 +26,7 @@ async function fetchPredictions(year, week) {
 
   // Handle the case if no predictions were found
   if (!predictions || predictions.length === 0) {
-    console.log(`No predictions for week ${week}, year ${year}`);
+    logger.debug(`No predictions for week ${week}, year ${year}`);
     return;
   }
 
@@ -33,7 +35,7 @@ async function fetchPredictions(year, week) {
 
 // Retrieve closing price and previous close price for a given week and year
 async function fetchWeeklyPriceHistory(year, week) {
-  console.log(`Fetching price history for week ${week}, year ${year}`);
+  logger.debug(`Fetching price history for week ${week}, year ${year}`);
   // Fetching weeklyPriceHistory using Prisma's findFirst operation
   const weeklyPriceHistory = await prisma.weeklyPriceHistory.findFirst({
     where: { week, year },
@@ -42,7 +44,7 @@ async function fetchWeeklyPriceHistory(year, week) {
 
   // Handle the case if no price history was found
   if (!weeklyPriceHistory) {
-    console.log(`No price history for week ${week}, year ${year}`);
+    logger.debug(`No price history for week ${week}, year ${year}`);
     return;
   }
 
@@ -51,7 +53,7 @@ async function fetchWeeklyPriceHistory(year, week) {
 
 // Process predictions by calculating direction points
 async function processPredictions(predictions, previousClose, actualValue) {
-  console.log(`Processing ${predictions.length} predictions`);
+  logger.debug(`Processing ${predictions.length} predictions`);
 
   // For each prediction, calculate direction points
   predictions.map((prediction) => {
@@ -76,14 +78,14 @@ function calculateDirectionPoints(prediction, previousClose, actualValue) {
 
   // Assign direction points
   prediction.direction_points = directionPoint;
-  console.log(
+  logger.debug(
     `Direction Points for user ${prediction.user_id}: ${directionPoint}`
   );
 }
 
 // Assign medal points based on sorted correct direction predictions
 async function assignMedalPoints(predictions, actualValue) {
-  console.log(`Assigning medal points for ${predictions.length} predictions`);
+  logger.debug(`Assigning medal points for ${predictions.length} predictions`);
 
   // For each prediction, calculate medal points
   predictions.map((prediction) => {
@@ -101,7 +103,7 @@ function calculateMedalPoints(predictions, prediction, actualValue) {
     (pred) => pred.direction_points > 0
   );
 
-  console.log("Correct Direction Predictions: ", correctDirectionPredictions);
+  logger.debug(`Correct Direction Predictions: ${correctDirectionPredictions}`);
 
   // If current prediction does not have a correct direction, then no medal points are awarded
   if (prediction.direction_points <= 0) {
@@ -116,9 +118,8 @@ function calculateMedalPoints(predictions, prediction, actualValue) {
       Math.abs(b.prediction - actualValue)
   );
 
-  console.log(
-    "Sorted Correct Direction Predictions: ",
-    correctDirectionPredictions
+  logger.debug(
+    `Sorted Correct Direction Predictions: ${correctDirectionPredictions}`
   );
 
   // Determine the index of the current prediction in the sorted list
@@ -126,20 +127,20 @@ function calculateMedalPoints(predictions, prediction, actualValue) {
     (pred) => pred.user_id === prediction.user_id
   );
 
-  console.log("Medal Index: ", medalIndex);
+  logger.debug(`Medal Index: ${medalIndex}`);
 
   // Determine medal points based on the index
   prediction.medal_points =
     medalIndex >= 0 && medalIndex < 3 ? 3 - medalIndex : 0;
 
-  console.log("Medal Points: ", prediction.medal_points);
+  logger.debug(`Medal Points: ${prediction.medal_points}`);
 
   return prediction;
 }
 
 // Update weekly scores in the database based on processed predictions
 async function updateWeeklyScores(predictions, year, week) {
-  console.log(`Updating weekly scores for week ${week}, year ${year}`);
+  logger.debug(`Updating weekly scores for week ${week}, year ${year}`);
 
   // For each prediction, update or create a score in the database
   for (const prediction of predictions) {
@@ -154,7 +155,7 @@ async function updateOrCreateScore(prediction, year, week) {
     where: { user_id: prediction.user_id, week, year },
   });
 
-  console.log(
+  logger.debug(
     `Creating Score for user ${prediction.user_id} with direction points: ${prediction.direction_points} and medal points: ${prediction.medal_points}`
   );
 
@@ -182,7 +183,7 @@ async function updateOrCreateScore(prediction, year, week) {
 
 // Main function to run leaderboard update for a given week and year
 async function updateLeaderboardForWeek(year, week) {
-  console.log(
+  logger.debug(
     `Running updateLeaderboardForWeek for year ${year}, week ${week}`
   );
 
@@ -195,14 +196,14 @@ async function updateLeaderboardForWeek(year, week) {
 
     // If no predictions found, return early
     if (!predictions || predictions.length === 0) {
-      console.log(`No predictions for week ${week}, year ${year}`);
+      logger.debug(`No predictions for week ${week}, year ${year}`);
       return;
     }
 
     // Fetch the closing price for this week and year
     const weeklyPriceHistory = await fetchWeeklyPriceHistory(year, week);
 
-    console.log(
+    logger.debug(
       `predictions = ${JSON.stringify(
         predictions
       )} and weeklyPriceHistory is ${JSON.stringify(weeklyPriceHistory)}`
@@ -210,7 +211,7 @@ async function updateLeaderboardForWeek(year, week) {
 
     // If no price history found, return early
     if (!weeklyPriceHistory) {
-      console.log(`No price history for week ${week}, year ${year}`);
+      logger.debug(`No price history for week ${week}, year ${year}`);
       return;
     }
 
@@ -232,7 +233,7 @@ async function updateLeaderboardForWeek(year, week) {
     // Update the weekly scores in the database
     await updateWeeklyScores(finalPredictions, year, week);
 
-    console.log("Leaderboard updated successfully!");
+    logger.debug("Leaderboard updated successfully!");
   } catch (error) {
     console.error("Failed to update leaderboard:", error);
     throw error;

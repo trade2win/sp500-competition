@@ -8,6 +8,8 @@ dotenv.config({ path: path.resolve(__dirname, `../.env.${env}`) });
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
+const logger = require("../logger");
+
 const models = {
   user: prisma.user,
   prediction: prisma.prediction,
@@ -19,9 +21,9 @@ async function main() {
   for (let model in models) {
     try {
       await models[model].deleteMany();
-      console.log(`Cleared ${model}`);
+      logger.debug(`Cleared ${model}`);
     } catch (error) {
-      console.log(`Error on model ${model}`, error);
+      logger.debug(`Error on model ${model} ${error}`);
     }
   }
 }

@@ -1,6 +1,7 @@
 // Import required modules
 const { updateWeek } = require("../services/priceUpdates");
 const { getCurrentTimeData } = require("../services/dateHelpers");
+const logger = require("../logger");
 
 /**
  * Fetch historical data for all weeks of a given year and store it in the database
@@ -17,11 +18,11 @@ async function importHistoricalData(year) {
   const numWeeks =
     year === currentTimeData.year ? currentTimeData.week - 1 : 53;
 
-  console.log(`Fetching data for year ${year}`);
+  logger.debug(`Fetching data for year ${year}`);
 
   // Fetch data for each week and store it in the database
   for (let week = 1; week <= numWeeks; week++) {
-    console.log(`Fetching data for week ${week}`);
+    logger.debug(`Fetching data for week ${week}`);
     await updateWeek(year, week);
     await new Promise((resolve) => setTimeout(resolve, 1000)); // Delay for 1 second
   }
