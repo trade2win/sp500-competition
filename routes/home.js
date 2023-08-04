@@ -2,10 +2,12 @@ const express = require("express");
 const router = express.Router();
 const yahooFinance = require("yahoo-finance2").default;
 const { findQuarterPredictions } = require("../database/predictions");
+const { findPreviousWeekClose } = require("../database/weeklyPriceHistory");
 const {
   getWeekNumbers,
   getCurrentQuarter,
 } = require("../services/dateHelpers");
+const dateHelpers = require("../services/dateHelpers.js");
 
 router.get("/", async (req, res) => {
   try {
@@ -14,6 +16,7 @@ router.get("/", async (req, res) => {
 
     const user_id = req.user ? req.user.id : null; // if not logged in then return null
 
+    const currentTimeData = dateHelpers.getCurrentTimeData();
     const currentYear = new Date().getFullYear();
     const currentQuarter = getCurrentQuarter();
     const predictions = await findQuarterPredictions(
@@ -22,11 +25,19 @@ router.get("/", async (req, res) => {
     );
     const weekNumbers = getWeekNumbers(currentQuarter);
 
+    // Fetch the closing price of the previous week
+    const previousClose = await findPreviousWeekClose(
+      currentTimeData.year,
+      currentTimeData.week - 1,
+      "^GSPC"
+    );
+
     const viewParameters = {
       user: req.user,
       title: "Trade2Win S&P 500 Contest",
       sp500Price: sp500Price,
       predictions: predictions,
+      previousClose: previousClose,
       weekNumbers: weekNumbers,
       quarter: currentQuarter,
       year: currentYear,

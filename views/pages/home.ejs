@@ -1,7 +1,18 @@
 <%- include('../partials/header', {user: user}); %>
 
 <h1><%= title %></h1>
-<h2>Current price: <%= sp500Price %></h2>
+<h2>
+  Current price: <%= sp500Price %> <% if (sp500Price > previousClose) { %>
+  <span class="text-success">&uarr;</span>
+  <!-- Up arrow for price increase -->
+  <% } else if (sp500Price < previousClose) { %>
+  <span class="text-danger">&darr;</span>
+  <!-- Down arrow for price decrease -->
+  <% } %>
+</h2>
+<p class="text-muted">
+  Last week's S&P 500 close was <strong><%= previousClose.toFixed(2) %></strong>
+</p>
 
 <p>
   Join the conversation here:
