@@ -21,63 +21,14 @@ const prisma = new PrismaClient({
 });
 const logger = require("../logger");
 
-// Creates a new prediction for a specific user, week, month, quarter, and year
-async function createPrediction(
-  user_id,
-  prediction,
-  week,
-  month,
-  quarter,
-  year
-) {
+// Creates a new prediction for a specific user, week, and year
+async function createPrediction(user_id, prediction, week, year) {
+  console.log(user_id, prediction, week, year);
   return await prisma.prediction.create({
     data: {
       user_id,
       prediction,
       week,
-      month,
-      quarter,
-      year,
-    },
-  });
-}
-
-// Finds the first prediction made by a specific user in a specific week and year
-async function findPrediction(user_id, week, year) {
-  return await prisma.prediction.findFirst({
-    where: {
-      user_id,
-      week,
-      year,
-    },
-  });
-}
-
-// Finds all predictions made by all users
-async function findAllPredictions() {
-  return await prisma.prediction.findMany({
-    include: {
-      user: true,
-    },
-  });
-}
-
-// Creates a new prediction for a specific user, week, month, quarter, and year
-async function createPrediction(
-  user_id,
-  prediction,
-  week,
-  month,
-  quarter,
-  year
-) {
-  return await prisma.prediction.create({
-    data: {
-      user_id,
-      prediction,
-      week,
-      month,
-      quarter,
       year,
     },
   });
