@@ -1,6 +1,8 @@
+require("dotenv").config();
 const { PrismaClient } = require("@prisma/client");
 const { updateLeaderboardForWeek } = require("../services/predictionScoring");
 const { getCurrentTimeData } = require("../services/dateHelpers");
+const { updateWeek } = require("../services/priceUpdates");
 const logger = require("../logger");
 
 const prisma = new PrismaClient();
@@ -19,6 +21,14 @@ async function updateCurrentWeekLeaderboard() {
     logger.debug(
       `Processing week ${currentTimeData.week} of year ${currentTimeData.year}`
     );
+
+    // Fetch data for the current week and store it in the database
+    logger.debug(
+      `Fetching data for week ${currentTimeData.week} of year ${currentTimeData.year}`
+    );
+    await updateWeek(currentTimeData.year, currentTimeData.week);
+    await new Promise((resolve) => setTimeout(resolve, 1000)); // Delay for 1 second
+
     await updateLeaderboardForWeek(currentTimeData.year, currentTimeData.week);
 
     logger.info("WeeklyScore for current week updated successfully!");

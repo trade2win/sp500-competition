@@ -37,6 +37,16 @@ npm run migrate:dev     // to create a new migration
 npm run migrate:deploy  // to apply the migration
 ```
 
+## Logging
+
+This application uses Winston as its logging library, which provides a simple and configurable way to control logging levels, output formats and more. All logs in the development environment are printed to the console for ease of debugging.
+
+In the production environment, we use Papertrail for log management. Papertrail provides a powerful interface for managing and understanding logs from different sources, making it easier to diagnose and fix issues.
+
+## Scripts
+
+Make sure you are running any script in the /scripts folder from the root directory of your project. If you're running it from within a sub-directory, the path to the .env file will be incorrect and the environment variables won't be loaded.
+
 ## Weekly Leaderboard Update
 
 We have a script, `weeklyScores.js`, that updates the leaderboard once a week. This script is designed to be run by Heroku Scheduler, but it can also be run manually if necessary.
