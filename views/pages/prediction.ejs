@@ -1,11 +1,16 @@
 <%- include('../partials/header', {user: user}); %>
-<h1>Predict where the S&P500 will finish in the coming week:</h1>
+<h2>Predict where the S&P500 will finish in the coming week:</h2>
 
-<% if (!predictionExists) { %>
+<% if (!showForm && alreadyPredicted) { %>
+<p>You've already submitted a prediction for this week!</p>
+<% } else if (!showForm && !isTimeToSubmit) { %>
+<p>
+  Sorry, it's not the correct time to submit predictions. <br />Predictions are
+  accepted from 11pm on Fridays, until 11pm on Sundays (UK time).
+</p>
+<% } else { %>
 <form action="/prediction" method="POST">
   <input type="text" name="prediction" placeholder="Prediction" />
   <input type="submit" value="OK" />
 </form>
-<% } else { %>
-<p>You've already submitted a prediction for this week!</p>
 <% } %> <%- include('../partials/footer'); %>

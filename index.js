@@ -44,6 +44,7 @@ app.use(
     secret: "watermelon", // The secret used to sign the session ID cookie
     resave: false, // Whether to force the session to be saved back to the session store
     saveUninitialized: false, // Whether to force an uninitialized session to be saved to the store
+    cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 }, // 30 days
   })
 );
 
@@ -61,11 +62,15 @@ const cspDirectives = {
     "default-src": ["'self'"],
     "script-src": ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"],
     "style-src": ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"],
+    "script-src-attr": ["'unsafe-inline'"],
     "font-src": ["'self'"],
     "img-src": ["'self'"],
     "form-action": [
       "'self'",
+      "'unsafe-inline'",
       "https://www.trade2win.com/audapi/oauth2/authorize",
+      "https://contest/trade2win.com/auth/provider/callback",
+      "http://127.0.0.1:8000/auth/provider/callback",
     ], // Add your OAuth2 provider URL
   },
 };

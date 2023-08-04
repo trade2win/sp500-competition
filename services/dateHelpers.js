@@ -87,9 +87,31 @@ function getDateOfISOWeek(year, week) {
   return weekStart;
 }
 
+const isTimeToSubmit = (req, res, next) => {
+  // Check if current time is within allowed timeframe
+  const now = new Date();
+  const dayOfWeek = now.getUTCDay(); // 0 (Sun) - 6 (Sat)
+  const hour = now.getUTCHours(); // 0 - 23
+
+  if (
+    !(
+      (dayOfWeek == 5 && hour >= 23) ||
+      dayOfWeek == 6 ||
+      (dayOfWeek == 0 && hour <= 23)
+    )
+  ) {
+    req.isTimeToSubmit = false;
+  } else {
+    req.isTimeToSubmit = true;
+  }
+
+  next();
+};
+
 module.exports = {
   getCurrentTimeData,
   getDateOfISOWeek,
   getWeekNumbers,
   getCurrentQuarter,
+  isTimeToSubmit,
 };

@@ -24,7 +24,7 @@ router.get("/", async (req, res) => {
 
     const viewParameters = {
       user: req.user,
-      title: "Welcome to Trade2Win S&P 500 Competition",
+      title: "Trade2Win S&P 500 Contest",
       sp500Price: sp500Price,
       predictions: predictions,
       weekNumbers: weekNumbers,

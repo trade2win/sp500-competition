@@ -1,8 +1,18 @@
 <%- include('../partials/header', {user: user}); %>
 
 <h1><%= title %></h1>
-<h1>The current price is <%= sp500Price %></h1>
+<h2>Current price: <%= sp500Price %></h2>
 
+<p>
+  Join the conversation here:
+  <a
+    href="https://www.trade2win.com/threads/s-p500-weekly-forecasting-competition-for-2023.241639/unread"
+    target="_blank"
+    >S&P500 - Weekly Forecasting Competition for 2023</a
+  ><br />
+  Note that <strong>T2W Bot</strong> uses the average of all submitted
+  predictions each week.
+</p>
 <%- include('../partials/resultsTable', { predictions: predictions, quarter:
 quarter, year: year, weekNumbers: weekNumbers }); %> <%-
 include('../partials/footer'); %>

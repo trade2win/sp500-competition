@@ -1,6 +1,13 @@
 <%- include('../partials/header', {user: user}); %>
-<h1>Login to Trade2Win S&P500</h1>
+<h2>Login to Join the Contest</h2>
+<p>Please login with <strong>Trade2Win</strong> to continue.</p>
+<p>
+  Not already registered?
+  <a href="https://www.trade2win.com/login/register" target="_blank"
+    >Register now</a
+  >, it's free!
+</p>
 <form action="/auth/provider" method="get">
-  <button type="submit">Login with Trade2Win</button>
+  <button class="btn btn-primary" type="submit">Login with Trade2Win</button>
 </form>
 <%- include('../partials/footer'); %>
