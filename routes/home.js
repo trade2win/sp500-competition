@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const yahooFinance = require("yahoo-finance2").default;
 const { findQuarterPredictions } = require("../database/predictions");
+const { findQuarterlyClosePrices } = require("../database/weeklyPriceHistory");
 const { findPreviousWeekClose } = require("../database/weeklyPriceHistory");
 const {
   getWeekNumbers,
@@ -23,6 +24,15 @@ router.get("/", async (req, res) => {
       currentYear,
       currentQuarter
     );
+    const closePrices = await findQuarterlyClosePrices(
+      currentYear,
+      currentQuarter
+    );
+    const closePricesObject = {};
+    closePrices.forEach((price) => {
+      closePricesObject[price.week] = price;
+    });
+
     const weekNumbers = getWeekNumbers(currentQuarter);
 
     // Fetch the closing price of the previous week
@@ -37,6 +47,7 @@ router.get("/", async (req, res) => {
       title: "S&P 500 Contest",
       sp500Price: sp500Price,
       predictions: predictions,
+      closePrices: closePricesObject,
       previousClose: previousClose,
       weekNumbers: weekNumbers,
       quarter: currentQuarter,

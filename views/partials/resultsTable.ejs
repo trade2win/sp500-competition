@@ -1,14 +1,25 @@
-<div class="table-responsive">
-<table class="table table-striped">
+s<div class="table-responsive">
+<table class="table table-striped fs-6">
   <thead class="bg-dark text-white">
     <tr>
-      <th class="t2w-bg">User</th>
+      <th class="t2w-bg"></th>
       <% weekNumbers.forEach(weekNumber => { %>
-      <th class="t2w-bg">Week <%= weekNumber %></th>
+      <th class="t2w-bg">W<%= weekNumber %></th>
       <% }) %>
     </tr>
   </thead>
   <tbody>
+      <tr>
+        <td class="t2w-bg"><strong>Week Close</strong></td>
+        <% weekNumbers.forEach(weekNumber => { const closePrice = closePrices[weekNumber]; if (closePrice) { %>
+          <td class="t2w-bg <%= closePrice.close > closePrice.previous_close ? '' : 'text-danger' %> fw-bold">
+           <%= Number(closePrice.close).toFixed(0) %>
+          </td>
+        <% } else { %>
+          <td></td> <!-- Or whatever you want to display when closePrice is undefined -->
+        <% } }) %>
+        
+      </tr>
     <% predictions.forEach(user => { %>
     <tr>
       <td><a href="https://www.trade2win.com/members/<%= user.xenforo_id %>/" target="_blank"><%= user.name %></a></td>
@@ -34,8 +45,9 @@
 </table>
 </div>
 <div class="mt-4 text-center">
-  <h4>Key</h4>
-  <table class="mx-auto">
+
+  <table class="mx-auto small">
+    <tr><td colspan="2" style="text-align: left"><h6><strong>CONTEST KEY</strong></h6></td></tr>
     <tr>
       <td style="text-align: left">↑</td>
       <td style="text-align: left">Up direction</td>

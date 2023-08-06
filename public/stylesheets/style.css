@@ -47,6 +47,11 @@ a.no-color-change:active {
   color: white;
 }
 
+.table td.t2w-bg {
+  background-color: #edf6fd;
+  color: black;
+}
+
 .table td.bg-gold {
   background-color: #ffd700;
   color: black;

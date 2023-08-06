@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { findQuarterPredictions } = require("../database/predictions");
+const { findQuarterlyClosePrices } = require("../database/weeklyPriceHistory");
 const { getWeekNumbers } = require("../services/dateHelpers");
 const logger = require("../logger");
 
@@ -13,13 +14,26 @@ router.get("/:year/Q:quarter", async (req, res) => {
     const quarterNumber = parseInt(quarter, 10);
 
     const predictions = await findQuarterPredictions(yearNumber, quarterNumber);
-    logger.debug(`${yearNumber} ${quarterNumber}`);
+    const closePrices = await findQuarterlyClosePrices(
+      yearNumber,
+      quarterNumber
+    );
+    const closePricesObject = {};
+    closePrices.forEach((price) => {
+      closePricesObject[price.week] = price;
+    });
+
+    logger.debug(
+      `find predictions and close prices for ${yearNumber} ${quarterNumber}`
+    );
+    logger.debug(JSON.stringify(closePrices));
 
     const weekNumbers = getWeekNumbers(quarterNumber);
 
     // Pass the user, quarter, year and weekNumbers to the view along with the predictions
     res.render("pages/results", {
       predictions,
+      closePrices: closePricesObject,
       user: req.user,
       quarter: quarterNumber,
       year: yearNumber,

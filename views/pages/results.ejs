@@ -25,6 +25,6 @@
     window.location.href = `/results/${year}/Q${quarter}`;
   }
 </script>
-<%- include('../partials/resultsTable', { predictions: predictions, quarter: quarter, year: year, weekNumbers: weekNumbers }); %>
+<%- include('../partials/resultsTable', { predictions: predictions, closePrices: closePrices, quarter: quarter, year: year, weekNumbers: weekNumbers }); %>
 
 <%- include('../partials/footer'); %>

@@ -26,6 +26,26 @@ async function findPreviousWeekClose(year, week, index_name) {
   return result.close;
 }
 
+const findQuarterlyClosePrices = async (year, quarter) => {
+  // Determine the week range based on the quarter
+  const startWeek = (quarter - 1) * 13 + 1;
+  const endWeek = startWeek + 12;
+
+  return prisma.weeklyPriceHistory.findMany({
+    where: {
+      year,
+      week: {
+        gte: startWeek,
+        lte: endWeek,
+      },
+    },
+    orderBy: {
+      week: "asc",
+    },
+  });
+};
+
 module.exports = {
   findPreviousWeekClose,
+  findQuarterlyClosePrices,
 };
