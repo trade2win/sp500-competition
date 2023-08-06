@@ -11,7 +11,7 @@ const { body, validationResult } = require("express-validator");
 router.get("/", ensureAuthenticated, isTimeToSubmit, async (req, res) => {
   const user_id = req.user.id;
 
-  const dateInfo = getCurrentTimeData(new Date());
+  const dateInfo = getCurrentTimeData();
   const { week, month, quarter, year } = dateInfo;
 
   const prediction = await findPrediction(user_id, week + 1, year);
