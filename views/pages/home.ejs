@@ -2,16 +2,19 @@
 
 <h1><%= title %></h1>
 <h2>
-  Current price: <%= sp500Price %> <% if (sp500Price > previousClose) { %>
-  <span class="text-success">&uarr;</span>
+  Current price: <%= sp500Price %> <% const percentageChange = ((sp500Price -
+  previousClose) / previousClose * 100).toFixed(2); if (sp500Price >
+  previousClose) { %>
+  <span class="text-success">&uarr; (<%= percentageChange %>%)</span>
   <!-- Up arrow for price increase -->
   <% } else if (sp500Price < previousClose) { %>
-  <span class="text-danger">&darr;</span>
+  <span class="text-danger">&darr; (<%= percentageChange %>%)</span>
   <!-- Down arrow for price decrease -->
   <% } %>
 </h2>
 <p class="text-muted">
-  Last week's S&P 500 close was <strong><%= previousClose.toFixed(2) %></strong>
+  Previous weekly S&P 500 close was
+  <strong><%= previousClose.toFixed(2) %></strong>
 </p>
 
 <p>

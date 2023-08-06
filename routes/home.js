@@ -16,7 +16,7 @@ router.get("/", async (req, res) => {
 
     const user_id = req.user ? req.user.id : null; // if not logged in then return null
 
-    const currentTimeData = dateHelpers.getCurrentTimeData();
+    const currentTimeData = dateHelpers.getCurrentTimeData(true);
     const currentYear = new Date().getFullYear();
     const currentQuarter = getCurrentQuarter();
     const predictions = await findQuarterPredictions(

@@ -15,7 +15,11 @@ router.get("/", ensureAuthenticated, isTimeToSubmit, async (req, res) => {
   const { week, month, quarter, year } = dateInfo;
 
   const prediction = await findPrediction(user_id, week + 1, year);
-  console.log(`ererererere ${week}`);
+  console.log(
+    `finding prediction ${user_id} ${week} ${year} and ${JSON.stringify(
+      prediction
+    )}`
+  );
   if (prediction) {
     res.render("pages/prediction", {
       user: req.user,
@@ -40,19 +44,8 @@ router.get("/", ensureAuthenticated, isTimeToSubmit, async (req, res) => {
   }
 });
 
-router.post("/", ensureAuthenticated, async (req, res) => {
-  // Check if current time is within allowed timeframe
-  const now = new Date();
-  const dayOfWeek = now.getUTCDay(); // 0 (Sun) - 6 (Sat)
-  const hour = now.getUTCHours(); // 0 - 23
-
-  if (
-    !(
-      (dayOfWeek == 5 && hour >= 23) ||
-      dayOfWeek == 6 ||
-      (dayOfWeek == 0 && hour <= 23)
-    )
-  ) {
+router.post("/", ensureAuthenticated, isTimeToSubmit, async (req, res) => {
+  if (!req.isTimeToSubmit) {
     return res.status(403).json({
       error:
         "Predictions can only be submitted from 11pm UK time on Friday to 11pm UK time on Sunday.",
@@ -68,7 +61,7 @@ router.post("/", ensureAuthenticated, async (req, res) => {
   const prediction = parseFloat(req.body.prediction);
   const user_id = req.user.id;
 
-  let { week, month, quarter, year } = getCurrentTimeData(new Date());
+  let { week, month, quarter, year } = getCurrentTimeData();
   week++;
   if (week > 52) {
     week = 1;

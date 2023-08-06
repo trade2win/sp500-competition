@@ -1,12 +1,8 @@
-function getCurrentQuarter() {
-  const month = new Date().getMonth() + 1; // getMonth() is zero-indexed
-  return Math.ceil(month / 3);
-}
+const moment = require("moment");
 
-module.exports = {
-  getWeekNumbers,
-  getCurrentQuarter,
-};
+function getCurrentQuarter() {
+  return moment().quarter();
+}
 
 function getWeekNumbers(quarter) {
   const quarterWeeks = {
@@ -25,31 +21,30 @@ function getWeekNumbers(quarter) {
   return weekNumbers;
 }
 
-module.exports = {
-  getWeekNumbers,
-};
+// adjustForSunday is used on the homepage to continue to show where the S&P finished in comparison to the previous week
+function getCurrentTimeData(adjustForSunday = false) {
+  const currentDate = moment();
 
-/**
- * Returns the current week, month, quarter, and year
- * @return {Object} An object containing week, month, quarter, and year
- * example: { "week": 31, "month": 8, "quarter": 3,"year": 2023
- */
-function getCurrentTimeData() {
-  const currentDate = new Date();
+  // Calculate week of the year according to the ISO standard (Monday start)
+  let week = currentDate.isoWeek();
 
-  // Calculate week of the year
-  const startOfYear = new Date(currentDate.getFullYear(), 0, 1);
-  const week =
-    Math.floor((currentDate - startOfYear) / (1000 * 60 * 60 * 24 * 7)) + 1;
+  // If today is Sunday and adjustForSunday is true, adjust week number to refer to the previous week
+  if (adjustForSunday && currentDate.day() === 0) {
+    week = week - 1;
+    // If the previous week was the last week of the previous year
+    if (week === 0) {
+      week = 52; // or 53 depending on the year
+    }
+  }
 
-  // Calculate month (0-based in JavaScript, so adding 1 to make it 1-based)
-  const month = currentDate.getMonth() + 1;
+  // Calculate month (1-based in Moment.js)
+  const month = currentDate.month() + 1;
 
   // Calculate quarter
-  const quarter = Math.ceil(month / 3);
+  const quarter = currentDate.quarter();
 
   // Get current year
-  const year = currentDate.getFullYear();
+  const year = currentDate.year();
 
   return {
     week,
@@ -58,46 +53,21 @@ function getCurrentTimeData() {
     year,
   };
 }
-
-/**
- * Returns the starting date of the specified week of a year
- * @param {number} w - Week number
- * @param {number} y - Year
- * @return {Date} The starting date of the specified week of the year
- * example: Mon Jul 31 2023 00:00:00 GMT+0100 (British Summer Time) if run on Thurs 3rd August
- */
 function getDateOfISOWeek(year, week) {
-  // Start from January 1st, then add the number of days equivalent to (week number - 1) weeks
-  // new Date(year, monthIndex, day, hours, minutes, seconds, milliseconds)
-  // nb day has no limit will go past months and years
-  let simple = new Date(year, 0, 1 + (week - 1) * 7);
-
-  // Get the day of the week (0 for Sunday, 1 for Monday, ..., 6 for Saturday)
-  let dayOfWeek = simple.getDay();
-
-  // Calculate the start date of the week
-  let weekStart = simple;
-  if (dayOfWeek <= 4) {
-    // If the day of the week is between Sunday (0) and Thursday (4), subtract the day number from the date to get to the start of the week (Monday)
-    weekStart.setDate(simple.getDate() - simple.getDay() + 1);
-  } else {
-    // If the day of the week is Friday (5) or Saturday (6), add the necessary number of days to get to the start of the next week (Monday)
-    weekStart.setDate(simple.getDate() + 8 - simple.getDay());
-  }
-  return weekStart;
+  return moment().year(year).isoWeek(week).startOf("isoWeek").toDate();
 }
 
 const isTimeToSubmit = (req, res, next) => {
   // Check if current time is within allowed timeframe
-  const now = new Date();
-  const dayOfWeek = now.getUTCDay(); // 0 (Sun) - 6 (Sat)
-  const hour = now.getUTCHours(); // 0 - 23
+  const now = moment.utc();
+  const dayOfWeek = now.isoWeekday(); // 1 (Mon) - 7 (Sun)
+  const hour = now.hour(); // 0 - 23
 
   if (
     !(
       (dayOfWeek == 5 && hour >= 23) ||
       dayOfWeek == 6 ||
-      (dayOfWeek == 0 && hour <= 23)
+      (dayOfWeek == 7 && hour <= 23)
     )
   ) {
     req.isTimeToSubmit = false;

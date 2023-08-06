@@ -4,7 +4,10 @@ TODO
 
 Next steps
 
-- manage sessions on postgres (maybe connect-pg-simple)
+apply security enhacements
+// secret: process.env.SESSION_SECRET || "watermelon", // Use an environment variable for production
+//secure: app.get("env") === "production", // Set secure only in production
+
 - Add email to user table
 - Improve formatting of the weekly results email
 - Fix the formatting of the dropdown on mobile screens
@@ -24,6 +27,7 @@ Nice to Haves
 
 DONE
 
+- manage sessions on postgres (maybe connect-pg-simple)
 - Tidy up the github repo to make it ready to share
 - Link back to the thread on T2W
 - Fix the dropdown it stopped working, also the links to
