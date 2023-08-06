@@ -58,13 +58,12 @@ app.use(
       pool: pgPool, // Connection pool
       tableName: "Session", // Use a custom table name (optional, default is 'session')
     }),
-    // secret: process.env.SESSION_SECRET || "watermelon", // Use an environment variable for production
-    secret: "watermelon",
+    secret: process.env.SESSION_SECRET || "watermelon", // Use an environment variable for production
     resave: false,
     saveUninitialized: false,
     cookie: {
       maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-      //secure: app.get("env") === "production", // Set secure only in production
+      secure: app.get("env") === "production", // Set secure only in production
     },
   })
 );
