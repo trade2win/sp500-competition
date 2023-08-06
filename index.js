@@ -14,6 +14,9 @@ const { Pool } = require("pg");
 const pgPool = new Pool({
   // Your PostgreSQL connection settings
   connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
 
 // Helmet is one of the most popular and widely used middleware for securing HTTP headers in Node.js/Express applications.
