@@ -3,7 +3,7 @@ const { PrismaClient } = require("@prisma/client");
 
 // Initialize prisma client
 const prisma = new PrismaClient();
-
+const { sendEmail } = require("./emailHandler");
 const logger = require("../logger");
 
 // Delete existing scores for a given week and year
@@ -103,7 +103,11 @@ function calculateMedalPoints(predictions, prediction, actualValue) {
     (pred) => pred.direction_points > 0
   );
 
-  logger.debug(`Correct Direction Predictions: ${correctDirectionPredictions}`);
+  logger.debug(
+    `Correct Direction Predictions: ${JSON.stringify(
+      correctDirectionPredictions
+    )}`
+  );
 
   // If current prediction does not have a correct direction, then no medal points are awarded
   if (prediction.direction_points <= 0) {
@@ -142,10 +146,15 @@ function calculateMedalPoints(predictions, prediction, actualValue) {
 async function updateWeeklyScores(predictions, year, week) {
   logger.debug(`Updating weekly scores for week ${week}, year ${year}`);
 
+  const userSummaries = [];
+
   // For each prediction, update or create a score in the database
   for (const prediction of predictions) {
-    await updateOrCreateScore(prediction, year, week);
+    const userSummary = await updateOrCreateScore(prediction, year, week);
+    userSummaries.push(userSummary);
   }
+
+  return userSummaries;
 }
 
 // Update or create a score in the database based on a given prediction
@@ -230,8 +239,15 @@ async function updateLeaderboardForWeek(year, week) {
       actualValue
     );
 
-    // Update the weekly scores in the database
-    await updateWeeklyScores(finalPredictions, year, week);
+    const userSummaries = await updateWeeklyScores(
+      finalPredictions,
+      year,
+      week
+    );
+
+    for (const userSummary of userSummaries) {
+      await sendCustomEmail(userSummary, actualValue, week, year);
+    }
 
     logger.debug("Leaderboard updated successfully!");
   } catch (error) {
@@ -240,4 +256,36 @@ async function updateLeaderboardForWeek(year, week) {
   }
 }
 
-module.exports = { updateLeaderboardForWeek };
+async function sendCustomEmail(userSummary, closingPrice, week, year) {
+  const user = await prisma.user.findUnique({
+    where: { id: userSummary.userId },
+  });
+
+  const to = "pagould@gmail.com"; // replace with user.email
+  const subject = `Results for Week ${week}, Year ${year}`;
+
+  let text = `Your prediction was ${userSummary.prediction}. `;
+  text += `The closing price of the S&P 500 was ${closingPrice}. `;
+  text += userSummary.directionPoints > 0 ? "Congrats" : "Sorry";
+  text += `, you ${
+    userSummary.directionPoints > 0 ? "earned" : "lost"
+  } ${Math.abs(userSummary.directionPoints)} direction points this week.`;
+
+  if (userSummary.medalType) {
+    text += ` You came ${
+      userSummary.medalType === "gold"
+        ? "1st"
+        : userSummary.medalType === "silver"
+        ? "2nd"
+        : "3rd"
+    } with ${userSummary.medalType} and earned ${
+      userSummary.medalPoints
+    } medal points.`;
+  }
+
+  const html = `<p>${text}</p>`; // You can make this more elaborate with HTML if you want
+
+  sendEmail(to, subject, text, html);
+}
+
+module.exports = { updateLeaderboardForWeek, sendCustomEmail };

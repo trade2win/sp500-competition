@@ -8,6 +8,13 @@ dotenv.config({ path: path.resolve(__dirname, `.env.${env}`) });
 // Import core libraries
 const express = require("express"); // Express is a minimalist web framework for Node.js
 const session = require("express-session"); // Creates a session middleware for setting up session cookies
+const pgSession = require("connect-pg-simple")(session);
+const { Pool } = require("pg");
+
+const pgPool = new Pool({
+  // Your PostgreSQL connection settings
+  connectionString: process.env.DATABASE_URL,
+});
 
 // Helmet is one of the most popular and widely used middleware for securing HTTP headers in Node.js/Express applications.
 const helmet = require("helmet");
@@ -44,13 +51,19 @@ app.use(express.static("public"));
 // Configure sessions to store data persistently across the user session
 app.use(
   session({
-    secret: "watermelon", // The secret used to sign the session ID cookie
-    resave: false, // Whether to force the session to be saved back to the session store
-    saveUninitialized: false, // Whether to force an uninitialized session to be saved to the store
-    cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 }, // 30 days
+    store: new pgSession({
+      pool: pgPool, // Connection pool
+      tableName: "Session", // Use a custom table name (optional, default is 'session')
+    }),
+    secret: process.env.SESSION_SECRET || "watermelon", // Use an environment variable for production
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+      secure: app.get("env") === "production", // Set secure only in production
+    },
   })
 );
-
 // Initialize Passport.js as middleware for the Express app
 app.use(passport.initialize());
 app.use(passport.session());

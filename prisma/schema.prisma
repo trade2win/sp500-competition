@@ -7,6 +7,15 @@ datasource db {
   url      = env("DATABASE_URL")
 } 
 
+model Session {
+  sid      String   @id @map("sid")
+  sess     Json     @map("sess")
+  expire  DateTime @map("expire")
+  
+  @@index([expire], name: "session_expire_index")
+}
+
+
 model User {
   id            Int      @id @default(autoincrement())
   xenforo_id    Int      @unique

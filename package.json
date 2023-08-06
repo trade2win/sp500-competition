@@ -25,9 +25,11 @@
   "homepage": "https://github.com/trade2win/sp500-competition#readme",
   "dependencies": {
     "@prisma/client": "^5.0.0",
+    "@sendgrid/mail": "^7.7.0",
     "@types/node": "^18.0.6",
     "axios": "^1.4.0",
     "body-parser": "^1.20.2",
+    "connect-pg-simple": "^9.0.0",
     "csv-parser": "^3.0.0",
     "dotenv": "^16.3.1",
     "ejs": "^3.1.9",
