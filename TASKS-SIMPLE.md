@@ -4,10 +4,10 @@ TODO
 
 Next steps
 
-apply security enhacements
-// secret: process.env.SESSION_SECRET || "watermelon", // Use an environment variable for production
-//secure: app.get("env") === "production", // Set secure only in production
-
+- Apply security enhacements
+  // secret: process.env.SESSION_SECRET || "watermelon", // Use an environment variable for production
+  //secure: app.get("env") === "production", // Set secure only in production
+- Remove the need to put in git password twice on each commit
 - Add email to user table
 - Improve formatting of the weekly results email
 - Fix the formatting of the dropdown on mobile screens
@@ -24,6 +24,8 @@ Nice to Haves
 - About us, contact us and T&C pages
 - Improve the scheduling currently we use heroku simple scheduling but it's only UTC time more advanced
   would be https://devcenter.heroku.com/articles/scheduled-jobs-custom-clock-processes
+  [competition thread](https://www.trade2win.com/threads/
+- any maintenance tasks or scripts that need to be run on a schedule (like your weeklyScores.js), you might want to consider running them as scheduled GitHub Actions instead of, or in addition to, using Heroku Scheduler. This can sometimes be more flexible and provide better logging and error handling.
 
 DONE
 

@@ -20,6 +20,7 @@ model User {
   id            Int      @id @default(autoincrement())
   xenforo_id    Int      @unique
   username      String
+  email         String?   @unique
   access_token  String?
   refresh_token String?
   predictions   Prediction[] 

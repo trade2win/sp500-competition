@@ -20,7 +20,7 @@ router.get("/", ensureAuthenticated, (req, res) => {
     .get("/", {})
     .then((response) => {
       const userData = response.data.me; // adjust according to actual response structure
-      res.render("pages/me", { user: userData });
+      res.render("pages/me", { user: user });
     })
     .catch((err) => {
       console.error(err);

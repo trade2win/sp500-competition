@@ -261,7 +261,7 @@ async function sendCustomEmail(userSummary, closingPrice, week, year) {
     where: { id: userSummary.userId },
   });
 
-  const to = "pagould@gmail.com"; // replace with user.email
+  const to = user.email;
   const subject = `Results for Week ${week}, Year ${year}`;
 
   let text = `Your prediction was ${userSummary.prediction}. `;

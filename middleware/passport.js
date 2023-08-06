@@ -43,12 +43,14 @@ passport.use(
             where: { xenforo_id: userData.user_id },
             update: {
               username: userData.username,
+              email: userData.email,
               access_token: access_token,
               refresh_token: refresh_token,
             },
             create: {
               xenforo_id: userData.user_id,
               username: userData.username,
+              email: userData.email,
               access_token: access_token,
               refresh_token: refresh_token,
             },
