@@ -4,11 +4,11 @@ TODO
 
 Next steps
 
+-
 - Apply security enhacements
   // secret: process.env.SESSION_SECRET || "watermelon", // Use an environment variable for production
   //secure: app.get("env") === "production", // Set secure only in production
 - Remove the need to put in git password twice on each commit
-- Add email to user table
 - Improve formatting of the weekly results email
 - Fix the formatting of the dropdown on mobile screens
 
@@ -29,6 +29,7 @@ Nice to Haves
 
 DONE
 
+- Add email to user table
 - manage sessions on postgres (maybe connect-pg-simple)
 - Tidy up the github repo to make it ready to share
 - Link back to the thread on T2W
