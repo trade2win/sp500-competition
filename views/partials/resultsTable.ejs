@@ -25,14 +25,18 @@
       <% predictions.forEach(user => { %>
         <tr>
           <td class="t2w-thbg"><%= user.totalScore %></td>
-          <td><a href="https://www.trade2win.com/members/<%= user.xenforo_id %>/" target="_blank"><%= user.name %></a></td>
-          <% weekNumbers.forEach(weekNumber => { const prediction = user.predictions[weekNumber]; let bgColorClass = ''; let textColorClass = ''; let fontWeightClass = ''; if (prediction) { const closePrice = closePrices[weekNumber] || closePrices[weekNumber - 1]; if (closePrice) { textColorClass = prediction.direction === -1 && closePrice.close < closePrice.previous_close ? 'text-danger' : ''; } if (prediction.weeklyScore) { switch (prediction.weeklyScore.medal_points) { case 3: bgColorClass = 'bg-gold'; break; case 2: bgColorClass = 'bg-silver'; break; case 1: bgColorClass = 'bg-bronze'; break; } fontWeightClass = prediction.weeklyScore.direction_points > 0 ? 'fw-bold' : ''; } } %>
-          <td class="<%= bgColorClass %> <%= textColorClass %> <%= fontWeightClass %>" data-prediction="<%= JSON.stringify(prediction) %>">
-            <%= (prediction && prediction.prediction) || '' %>
+          <td style="text-align: left;">
+            <img src="<%= user.avatar_url %>" alt="<%= user.name %> avatar" style="width: 30px; height: 30px; margin-right: 5px;"> <!-- Avatar image -->
+            <a href="https://www.trade2win.com/members/<%= user.xenforo_id %>/" target="_blank"><%= user.name %></a> <!-- Username -->
           </td>
-          <% }) %>
-        </tr>
+          <% weekNumbers.forEach(weekNumber => { const prediction = user.predictions[weekNumber]; let bgColorClass = ''; let textColorClass = ''; let fontWeightClass = ''; if (prediction) { const closePrice = closePrices[weekNumber] || closePrices[weekNumber - 1]; if (closePrice) { textColorClass = prediction.direction === -1 && closePrice.close < closePrice.previous_close ? 'text-danger' : ''; } if (prediction.weeklyScore) { switch (prediction.weeklyScore.medal_points) { case 3: bgColorClass = 'bg-gold'; break; case 2: bgColorClass = 'bg-silver'; break; case 1: bgColorClass = 'bg-bronze'; break; } fontWeightClass = prediction.weeklyScore.direction_points > 0 ? 'fw-bold' : ''; } } %>
+            <td class="<%= bgColorClass %> <%= textColorClass %> <%= fontWeightClass %>" data-prediction="<%= JSON.stringify(prediction) %>">
+              <%= (prediction && prediction.prediction) || '' %>
+            </td>
+            <% }) %>
+          </tr>
         <% }) %>
+      
         
   </tbody>
 </table>

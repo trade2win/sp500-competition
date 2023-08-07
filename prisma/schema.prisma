@@ -21,6 +21,7 @@ model User {
   xenforo_id    Int      @unique
   username      String
   email         String?   @unique
+  avatar_url    String?
   access_token  String?
   refresh_token String?
   predictions   Prediction[] 

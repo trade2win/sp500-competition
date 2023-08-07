@@ -83,7 +83,7 @@ const cspDirectives = {
     "style-src": ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"],
     "script-src-attr": ["'unsafe-inline'"],
     "font-src": ["'self'"],
-    "img-src": ["'self'"],
+    "img-src": ["'self'", "https://www.trade2win.com"], // Added the specific domain
     "form-action": [
       "'self'",
       "'unsafe-inline'",

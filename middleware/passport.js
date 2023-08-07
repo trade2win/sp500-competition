@@ -37,6 +37,7 @@ passport.use(
         .get("/me")
         .then(async (response) => {
           const userData = response.data.me;
+          const avatarUrl = userData.avatar_urls.m; // Extract the medium-sized avatar URL
 
           // Use the retrieved user information to find or create a user in the local database
           const user = await prisma.user.upsert({
@@ -44,6 +45,7 @@ passport.use(
             update: {
               username: userData.username,
               email: userData.email,
+              avatar_url: avatarUrl,
               access_token: access_token,
               refresh_token: refresh_token,
             },
@@ -51,6 +53,7 @@ passport.use(
               xenforo_id: userData.user_id,
               username: userData.username,
               email: userData.email,
+              avatar_url: avatarUrl,
               access_token: access_token,
               refresh_token: refresh_token,
             },
