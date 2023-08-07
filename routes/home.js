@@ -25,16 +25,14 @@ router.get("/", async (req, res) => {
 
     // Determine the current week number
     const currentWeekNumber = currentTimeData.week;
-    const remainingWeeks = weekNumbers.filter(
-      (week) => week >= currentWeekNumber
-    );
+    const futureWeeksIndex = weekNumbers.indexOf(currentWeekNumber) + 1; // +1 to start with the week after the current one
 
-    if (remainingWeeks.length > 1) {
-      // Combine the future weeks into a single entry
-      const start = remainingWeeks[0];
-      const end = remainingWeeks[remainingWeeks.length - 1];
-      weekNumbers.length = weekNumbers.indexOf(start);
-      weekNumbers.push(`${start}-${end}`);
+    if (futureWeeksIndex < weekNumbers.length - 1) {
+      // Check if there are more than one future weeks
+      const start = weekNumbers[futureWeeksIndex];
+      const end = weekNumbers[weekNumbers.length - 1];
+      weekNumbers.length = futureWeeksIndex; // Trim the array to include only up to the current week
+      weekNumbers.push(`${start}-${end}`); // Combine the future weeks into a single entry
     }
 
     const predictions = await findQuarterPredictions(
