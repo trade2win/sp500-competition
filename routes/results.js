@@ -14,6 +14,22 @@ router.get("/:year/Q:quarter", async (req, res) => {
     const quarterNumber = parseInt(quarter, 10);
 
     const predictions = await findQuarterPredictions(yearNumber, quarterNumber);
+    predictions.forEach((user) => {
+      let totalScore = 0;
+      for (const weekNumber in user.predictions) {
+        const prediction = user.predictions[weekNumber];
+        if (prediction && prediction.weeklyScore) {
+          totalScore +=
+            prediction.weeklyScore.medal_points +
+            prediction.weeklyScore.direction_points; // Including both medal_points and direction_points
+        }
+      }
+      user.totalScore = totalScore;
+    });
+
+    // Sorting users by total score in descending order
+    predictions.sort((a, b) => b.totalScore - a.totalScore);
+
     const closePrices = await findQuarterlyClosePrices(
       yearNumber,
       quarterNumber

@@ -4,7 +4,7 @@ TODO
 
 Next steps
 
--
+- Check commit comment best practice
 - Apply security enhacements
   // secret: process.env.SESSION_SECRET || "watermelon", // Use an environment variable for production
   //secure: app.get("env") === "production", // Set secure only in production

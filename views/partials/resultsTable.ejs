@@ -2,14 +2,16 @@
 <table class="table table-striped fs-6">
   <thead class="bg-dark text-white">
     <tr>
-      <th class="t2w-bg"></th>
+      <th class="t2w-thbg"></th>
+      <th class="t2w-thbg">Q<%= quarter %></th>
       <% weekNumbers.forEach(weekNumber => { %>
-      <th class="t2w-bg">W<%= weekNumber %></th>
+      <th class="t2w-thbg">W<%= weekNumber %></th>
       <% }) %>
     </tr>
   </thead>
   <tbody>
       <tr>
+        <td class="t2w-thbg"><strong>Score</strong></td>
         <td class="t2w-bg"><strong>Week Close</strong></td>
         <% weekNumbers.forEach(weekNumber => { const closePrice = closePrices[weekNumber]; if (closePrice) { %>
           <td class="t2w-bg <%= closePrice.close > closePrice.previous_close ? '' : 'text-danger' %> fw-bold">
@@ -22,6 +24,7 @@
       </tr>
     <% predictions.forEach(user => { %>
     <tr>
+      <td class="t2w-thbg"><%= user.totalScore %></td>
       <td><a href="https://www.trade2win.com/members/<%= user.xenforo_id %>/" target="_blank"><%= user.name %></a></td>
       <% weekNumbers.forEach(weekNumber => { const prediction =
       user.predictions[weekNumber]; let bgColorClass = ''; let textColorClass =

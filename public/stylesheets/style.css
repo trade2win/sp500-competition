@@ -46,7 +46,12 @@ a.no-color-change:active {
 }
 
 /* Custom CSS to change the table header background color */
-.table th.t2w-bg {
+.table th.t2w-thbg {
+  background-color: #a40000;
+  color: white;
+}
+
+.table td.t2w-thbg {
   background-color: #a40000;
   color: white;
 }

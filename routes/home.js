@@ -20,10 +20,42 @@ router.get("/", async (req, res) => {
     const currentTimeData = dateHelpers.getCurrentTimeData(true);
     const currentYear = new Date().getFullYear();
     const currentQuarter = getCurrentQuarter();
+
+    const weekNumbers = getWeekNumbers(currentQuarter);
+
+    // Determine the current week number
+    const currentWeekNumber = currentTimeData.week;
+    const remainingWeeks = weekNumbers.filter(
+      (week) => week >= currentWeekNumber
+    );
+
+    if (remainingWeeks.length > 1) {
+      // Combine the future weeks into a single entry
+      const start = remainingWeeks[0];
+      const end = remainingWeeks[remainingWeeks.length - 1];
+      weekNumbers.length = weekNumbers.indexOf(start);
+      weekNumbers.push(`${start}-${end}`);
+    }
+
     const predictions = await findQuarterPredictions(
       currentYear,
       currentQuarter
     );
+    predictions.forEach((user) => {
+      let totalScore = 0;
+      for (const weekNumber in user.predictions) {
+        const prediction = user.predictions[weekNumber];
+        if (prediction && prediction.weeklyScore) {
+          totalScore +=
+            prediction.weeklyScore.medal_points +
+            prediction.weeklyScore.direction_points; // Including both medal_points and direction_points
+        }
+      }
+      user.totalScore = totalScore;
+    });
+
+    // Sorting users by total score in descending order
+    predictions.sort((a, b) => b.totalScore - a.totalScore);
     const closePrices = await findQuarterlyClosePrices(
       currentYear,
       currentQuarter
@@ -32,8 +64,6 @@ router.get("/", async (req, res) => {
     closePrices.forEach((price) => {
       closePricesObject[price.week] = price;
     });
-
-    const weekNumbers = getWeekNumbers(currentQuarter);
 
     // Fetch the closing price of the previous week
     const previousClose = await findPreviousWeekClose(
