@@ -25,10 +25,14 @@
       <% predictions.forEach(user => { %>
         <tr>
           <td class="t2w-thbg"><%= user.totalScore %></td>
-          <td style="text-align: left;">
-            <img src="<%= user.avatar_url %>" alt="<%= user.name %> avatar" style="width: 30px; height: 30px; margin-right: 5px;"> <!-- Avatar image -->
-            <a href="https://www.trade2win.com/members/<%= user.xenforo_id %>/" target="_blank"><%= user.name %></a> <!-- Username -->
-          </td>
+          <td style="text-align: left;" class="nowrap">
+            <% if (user.avatar_url) { %>
+              <img src="<%= user.avatar_url %>" alt="<%= user.name %> avatar" style="width: 32px; height: 32px; margin: -3px 5px;">
+            <% } else { %>
+              <img src="/images/default-avatar.png" alt="Default avatar" style="width: 32px; height: 32px; margin: -3px 5px;"> 
+            <% } %>
+            &nbsp;<a href="https://www.trade2win.com/members/<%= user.xenforo_id %>/" target="_blank"><%= user.name %></a> <!-- Username -->
+            </td>
           <% weekNumbers.forEach(weekNumber => { const prediction = user.predictions[weekNumber]; let bgColorClass = ''; let textColorClass = ''; let fontWeightClass = ''; if (prediction) { const closePrice = closePrices[weekNumber] || closePrices[weekNumber - 1]; if (closePrice) { textColorClass = prediction.direction === -1 && closePrice.close < closePrice.previous_close ? 'text-danger' : ''; } if (prediction.weeklyScore) { switch (prediction.weeklyScore.medal_points) { case 3: bgColorClass = 'bg-gold'; break; case 2: bgColorClass = 'bg-silver'; break; case 1: bgColorClass = 'bg-bronze'; break; } fontWeightClass = prediction.weeklyScore.direction_points > 0 ? 'fw-bold' : ''; } } %>
             <td class="<%= bgColorClass %> <%= textColorClass %> <%= fontWeightClass %>" data-prediction="<%= JSON.stringify(prediction) %>">
               <%= (prediction && prediction.prediction) || '' %>
