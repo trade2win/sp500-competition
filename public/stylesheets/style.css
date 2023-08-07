@@ -83,3 +83,7 @@ a.no-color-change:active {
 .fw-bold {
   font-weight: bold;
 }
+
+.nowrap {
+  white-space: nowrap;
+}
