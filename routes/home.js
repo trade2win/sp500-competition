@@ -32,6 +32,7 @@ router.get("/", async (req, res) => {
     // If it's the weekend, adjust the current week number to the next week
     if (isWeekend) {
       currentWeekNumber++;
+      currentWeekNumber++;
     }
 
     const futureWeeksIndex = weekNumbers.indexOf(currentWeekNumber) + 1; // +1 to start with the week after the current one
