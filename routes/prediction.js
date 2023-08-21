@@ -53,7 +53,7 @@ router.post("/", ensureAuthenticated, isTimeToSubmit, async (req, res) => {
   if (!req.isTimeToSubmit) {
     return res.status(403).json({
       error:
-        "Predictions can only be submitted from 11pm UK time on Friday to 11pm UK time on Sunday.",
+        "Predictions can only be submitted from 11pm UK time on Friday to 2:30pm UK time on Monday.",
     });
   }
 

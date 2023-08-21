@@ -62,12 +62,14 @@ const isTimeToSubmit = (req, res, next) => {
   const now = moment.utc();
   const dayOfWeek = now.isoWeekday(); // 1 (Mon) - 7 (Sun)
   const hour = now.hour(); // 0 - 23
+  const minute = now.minute(); // 0 - 59
 
   if (
     !(
       (dayOfWeek == 5 && hour >= 23) ||
       dayOfWeek == 6 ||
-      (dayOfWeek == 7 && hour <= 23)
+      dayOfWeek == 7 ||
+      (dayOfWeek == 1 && (hour < 13 || (hour == 13 && minute <= 30)))
     )
   ) {
     req.isTimeToSubmit = false;
