@@ -1,12 +1,17 @@
 const express = require("express");
 const router = express.Router();
 const { createPrediction, findPrediction } = require("../database/predictions");
+const { getPreviousWeekClose } = require("../database/weeklyPriceHistory");
 const { ensureAuthenticated } = require("../middleware/ensureAuthenticated");
 const {
   getCurrentTimeData,
   isTimeToSubmit,
 } = require("../services/dateHelpers");
 const { body, validationResult } = require("express-validator");
+
+function calculateDirection(prediction, previousWeekClose) {
+  return prediction >= previousWeekClose ? 1 : -1;
+}
 
 router.get("/", ensureAuthenticated, isTimeToSubmit, async (req, res) => {
   const user_id = req.user.id;
@@ -68,8 +73,11 @@ router.post("/", ensureAuthenticated, isTimeToSubmit, async (req, res) => {
     year++;
   }
 
+  const previousWeekClose = await getPreviousWeekClose(week - 1, year);
+  const direction = calculateDirection(prediction, previousWeekClose);
+
   try {
-    await createPrediction(user_id, prediction, week, year);
+    await createPrediction(user_id, prediction, direction, week, year);
     res.redirect("/");
   } catch (error) {
     console.error(error);
