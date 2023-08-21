@@ -20,16 +20,17 @@ function getWeekNumbers(quarter) {
 
   return weekNumbers;
 }
-
-// adjustForSunday is used on the homepage to continue to show where the S&P finished in comparison to the previous week
-function getCurrentTimeData(adjustForSunday = false) {
+function getCurrentTimeData(adjustForWeekend = false) {
   const currentDate = moment();
 
   // Calculate week of the year according to the ISO standard (Monday start)
   let week = currentDate.isoWeek();
 
-  // If today is Sunday and adjustForSunday is true, adjust week number to refer to the previous week
-  if (adjustForSunday && currentDate.day() === 0) {
+  // If today is weekend and adjustForWeekend is true, adjust week number to refer to the previous week
+  if (
+    adjustForWeekend &&
+    (currentDate.day() === 0 || currentDate.day() === 6)
+  ) {
     week = week - 1;
     // If the previous week was the last week of the previous year
     if (week === 0) {
