@@ -26,6 +26,13 @@ router.get("/", async (req, res) => {
     // Determine the current week number
     let currentWeekNumber = currentTimeData.week;
 
+    // Fetch the closing price of the previous week
+    const previousClose = await findPreviousWeekClose(
+      currentTimeData.year,
+      currentTimeData.week - 1,
+      "^GSPC"
+    );
+
     // Check if it's a weekend (Saturday or Sunday)
     const isWeekend = new Date().getDay() % 6 === 0;
 
@@ -71,13 +78,6 @@ router.get("/", async (req, res) => {
     closePrices.forEach((price) => {
       closePricesObject[price.week] = price;
     });
-
-    // Fetch the closing price of the previous week
-    const previousClose = await findPreviousWeekClose(
-      currentTimeData.year,
-      currentTimeData.week - 1,
-      "^GSPC"
-    );
 
     const viewParameters = {
       user: req.user,
