@@ -22,12 +22,13 @@ const prisma = new PrismaClient({
 const logger = require("../logger");
 
 // Creates a new prediction for a specific user, week, and year
-async function createPrediction(user_id, prediction, week, year) {
-  console.log(user_id, prediction, week, year);
+async function createPrediction(user_id, prediction, direction, week, year) {
+  console.log(user_id, prediction, direction, week, year);
   return await prisma.prediction.create({
     data: {
       user_id,
       prediction,
+      direction,
       week,
       year,
     },
