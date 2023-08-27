@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { createPrediction, findPrediction } = require("../database/predictions");
-const { getPreviousWeekClose } = require("../database/weeklyPriceHistory");
+const { findPreviousWeekClose } = require("../database/weeklyPriceHistory");
 const { ensureAuthenticated } = require("../middleware/ensureAuthenticated");
 const {
   getCurrentTimeData,
@@ -73,7 +73,7 @@ router.post("/", ensureAuthenticated, isTimeToSubmit, async (req, res) => {
     year++;
   }
 
-  const previousWeekClose = await getPreviousWeekClose(week - 1, year);
+  const previousWeekClose = await findPreviousWeekClose(week - 1, year);
   const direction = calculateDirection(prediction, previousWeekClose);
 
   try {
