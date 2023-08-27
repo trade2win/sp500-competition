@@ -33,23 +33,23 @@ router.get("/", async (req, res) => {
       "^GSPC"
     );
 
-    // Check if it's a weekend (Saturday or Sunday)
-    const isWeekend = new Date().getDay() % 6 === 0;
+    // // Check if it's a weekend (Saturday or Sunday)
+    // const isWeekend = new Date().getDay() % 6 === 0;
 
-    // If it's the weekend, adjust the current week number to the next week
-    if (isWeekend) {
-      currentWeekNumber++;
-    }
+    // // If it's the weekend, adjust the current week number to the next week
+    // if (isWeekend) {
+    //   currentWeekNumber++;
+    // }
 
-    const futureWeeksIndex = weekNumbers.indexOf(currentWeekNumber) + 1; // +1 to start with the week after the current one
+    // const futureWeeksIndex = weekNumbers.indexOf(currentWeekNumber) + 1; // +1 to start with the week after the current one
 
-    if (futureWeeksIndex < weekNumbers.length) {
-      // Check if there are future weeks
-      const start = weekNumbers[futureWeeksIndex];
-      const end = weekNumbers[weekNumbers.length - 1];
-      weekNumbers.length = futureWeeksIndex; // Trim the array to include only up to the current week
-      weekNumbers.push(`${start}-${end}`); // Combine the future weeks into a single entry
-    }
+    // if (futureWeeksIndex < weekNumbers.length) {
+    //   // Check if there are future weeks
+    //   const start = weekNumbers[futureWeeksIndex];
+    //   const end = weekNumbers[weekNumbers.length - 1];
+    //   weekNumbers.length = futureWeeksIndex; // Trim the array to include only up to the current week
+    //   weekNumbers.push(`${start}-${end}`); // Combine the future weeks into a single entry
+    // }
 
     const predictions = await findQuarterPredictions(
       currentYear,
