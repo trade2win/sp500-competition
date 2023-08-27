@@ -73,7 +73,7 @@ router.post("/", ensureAuthenticated, isTimeToSubmit, async (req, res) => {
     year++;
   }
 
-  const previousWeekClose = await findPreviousWeekClose(week - 1, year);
+  const previousWeekClose = await findPreviousWeekClose(year, week - 1);
   const direction = calculateDirection(prediction, previousWeekClose);
 
   try {
