@@ -27,8 +27,8 @@ router.get("/", async (req, res) => {
     let currentWeekNumber = currentTimeData.week;
 
     // Check if it's a weekend (Saturday or Sunday)
-    const isWeekend = new Date().getDay() % 6 === 0;
-
+    const day = new Date().getDay();
+    const isWeekend = day === 6 || day === 0;
     // If it's the weekend, adjust the current week number to the next week
     let adjustWeek;
     if (isWeekend) {
