@@ -18,8 +18,11 @@ router.get("/", ensureAuthenticated, isTimeToSubmit, async (req, res) => {
 
   const dateInfo = getCurrentTimeData();
   const { week, month, quarter, year } = dateInfo;
-
-  const prediction = await findPrediction(user_id, week + 1, year);
+  // if it's Sunday Monday then don't increment the week
+  if (new Date().getDay() !== 1) {
+    week++;
+  }
+  const prediction = await findPrediction(user_id, week, year);
   console.log(
     `finding prediction ${user_id} ${week} ${year} and ${JSON.stringify(
       prediction
@@ -66,11 +69,6 @@ router.post("/", ensureAuthenticated, isTimeToSubmit, async (req, res) => {
   const prediction = parseFloat(req.body.prediction);
   const user_id = req.user.id;
 
-  let { week, month, quarter, year } = getCurrentTimeData();
-  // if it's Sunday Monday then don't increment the week
-  if (new Date().getDay() !== 1) {
-    week++;
-  }
   if (week > 52) {
     week = 1;
     year++;
