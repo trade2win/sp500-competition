@@ -67,7 +67,10 @@ router.post("/", ensureAuthenticated, isTimeToSubmit, async (req, res) => {
   const user_id = req.user.id;
 
   let { week, month, quarter, year } = getCurrentTimeData();
-  week++;
+  // if it's Sunday Monday then don't increment the week
+  if (new Date().getDay() !== 1) {
+    week++;
+  }
   if (week > 52) {
     week = 1;
     year++;
