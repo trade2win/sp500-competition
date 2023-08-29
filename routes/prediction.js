@@ -17,7 +17,7 @@ router.get("/", ensureAuthenticated, isTimeToSubmit, async (req, res) => {
   const user_id = req.user.id;
 
   const dateInfo = getCurrentTimeData();
-  const { week, month, quarter, year } = dateInfo;
+  let { week, month, quarter, year } = dateInfo;
   // if it's Sunday Monday then don't increment the week
   if (new Date().getDay() !== 1) {
     week++;
