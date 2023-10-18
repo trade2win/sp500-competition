@@ -25,7 +25,7 @@ async function postBotPrediction() {
     });
 
     const totalPredictions = predictions.length;
-    const averagePrediction =
+    let averagePrediction =
       predictions.reduce((sum, prediction) => sum + prediction.prediction, 0) /
       totalPredictions;
 
