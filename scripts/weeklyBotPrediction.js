@@ -36,7 +36,7 @@ async function postBotPrediction() {
       return;
     }
 
-    averagePrediction = Math.round(averagePrediction * 100) / 100;
+    averagePrediction = Math.round(averagePrediction * 10) / 10;
 
     const previousWeek =
       currentTimeData.week === 1 ? 52 : currentTimeData.week - 1;
