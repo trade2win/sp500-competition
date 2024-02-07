@@ -18,6 +18,17 @@ const pgPool = new Pool({
   ssl: isProduction ? { rejectUnauthorized: false } : false,
 });
 
+// to avoid neon going to sleep after 5 mins
+function pingDatabase() {
+  pgPool.query("SELECT 1;", (err, res) => {
+    if (err) {
+      console.error("Error pinging database:", err);
+    } else {
+      console.log("Database pinged successfully");
+    }
+  });
+}
+
 // Helmet is one of the most popular and widely used middleware for securing HTTP headers in Node.js/Express applications.
 const helmet = require("helmet");
 
@@ -151,6 +162,11 @@ cron.schedule(
     timezone: "UTC",
   }
 );
+
+// Schedule the ping to run every 4 minutes to prevent neon sleeping after 5 mins of inactivity
+cron.schedule("*/4 * * * *", () => {
+  pingDatabase();
+});
 
 // Start the server and listen for incoming requests on the specified port
 const port = process.env.PORT || 8000; // The port number to use (process.env.PORT if specified, otherwise 8000)
