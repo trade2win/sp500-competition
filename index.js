@@ -31,6 +31,8 @@ const passport = require("./middleware/passport"); // Passport is authentication
 const cron = require("node-cron");
 const moment = require("moment-timezone");
 const { updateLeaderboard } = require("./services/predictionScoring");
+const { weeklyScores } = require("./scripts/weeklyScores");
+const { weeklyBotPrediction } = require("./scripts/weeklyBotPrediction");
 
 // Import middleware and routes
 const attachUser = require("./middleware/attachUser"); // Middleware to attach the user object to the response
@@ -123,6 +125,32 @@ cron.schedule("* * * * *", () => {
     updateLeaderboard();
   }
 });
+
+// Schedule the weeklyScores.js script to run daily at 9:30 PM UTC
+cron.schedule(
+  "30 21 * * *",
+  () => {
+    console.log("Running weeklyScores.js");
+    weeklyScores();
+  },
+  {
+    scheduled: true,
+    timezone: "UTC",
+  }
+);
+
+// Schedule the weeklyBotPrediction.js script to run daily at 1:30 PM UTC
+cron.schedule(
+  "30 13 * * *",
+  () => {
+    console.log("Running weeklyBotPrediction.js");
+    weeklyBotPrediction();
+  },
+  {
+    scheduled: true,
+    timezone: "UTC",
+  }
+);
 
 // Start the server and listen for incoming requests on the specified port
 const port = process.env.PORT || 8000; // The port number to use (process.env.PORT if specified, otherwise 8000)
