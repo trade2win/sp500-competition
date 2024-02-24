@@ -34,7 +34,7 @@ async function updateCurrentWeekLeaderboard() {
     logger.info("WeeklyScore for current week updated successfully!");
   } catch (error) {
     // Log any errors that occur during the process
-    console.error("Failed to update WeeklyScore for current week:", error);
+    console.log("Failed to update WeeklyScore for current week:", error);
     throw error;
   } finally {
     // Make sure to disconnect from the database when done
