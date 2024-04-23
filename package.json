@@ -48,7 +48,7 @@
     "qs": "^6.11.2",
     "technicalindicators": "^3.1.0",
     "winston": "^3.10.0",
-    "yahoo-finance2": "^2.4.3"
+    "yahoo-finance2": "^2.11.2"
   },
   "devDependencies": {
     "jest": "^29.6.1",
